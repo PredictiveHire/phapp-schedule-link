@@ -1,0 +1,7 @@
+dist/*
+public
+node_modules
+*.esm.js
+**/__generated__
+*.mjs
+vite-env.d.ts

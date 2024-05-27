@@ -1,0 +1,72 @@
+{
+  "token": {
+    "colorPrimary": "#245069",
+    "colorPrimaryBg": "#eefbff",
+    "colorPrimaryBorder": "#245069",
+    "colorPrimaryBorderHover": "#F0F0F0",
+    "colorPrimaryHover": "#245069",
+    "colorPrimaryText": "#262626",
+    "colorPrimaryTextHover": "#3b6275",
+    "colorPrimaryBgHover": "#245069",
+    "colorSuccess": "#389e0d",
+    "colorSuccessBg": "#F6FFED",
+    "colorWarning": "#fdc127",
+    "colorWarningBorder": "#BE860E",
+    "colorError": "#cf1322",
+    "colorErrorBg": "#FFF1F0",
+    "colorInfo": "#245069",
+    "colorInfoBg": "#EEFBFF",
+    "colorBorder": "#8C8C8C",
+    "colorBorderSecondary": "#C0C0C0",
+    "colorBorderTertiary": "#f0f0f0",
+    "colorTextSecondary": "rgba(0, 0, 0, 0.70)",
+    "colorTextTertiary": "rgba(0, 0, 0, 0.60)",
+    "colorTextQuaternary": "rgba(0, 0, 0, 0.40)",
+    "borderRadius": 4,
+    "borderRadiusSM": 4,
+    "borderRadiusLG": 4,
+    "borderRadiusXS": 2,
+    "boxShadow": "0 1px 16px 0 rgba(0, 0, 0, 0.08), 0 1px 6px -4px rgba(0, 0, 0, 0.08), 0 1px 28px 8px rgba(0, 0, 0, 0.05)",
+    "screenSM": 640,
+    "screenLG": 1024,
+    "screenXL": 1280,
+    "screenXXLMin": 1536,
+    "screenXXL": 1536,
+    "screenXLMax": 1536,
+    "colorBgSpotlight": "#FFFFFF"
+  },
+  "components": {
+    "Button": {
+      "colorPrimary": "#245069",
+      "colorLinkActive": "#9acedc",
+      "colorText": "#245069",
+      "colorBgContainer": "#ffffff",
+      "colorPrimaryHover": "#1A3A4D"
+    },
+    "Avatar": {
+      "colorTextPlaceholder": "#ffceff"
+    },
+    "Dropdown": {
+      "controlItemBgHover": "#EEFBFF",
+      "zIndexPopup": 1050
+    },
+    "Divider": {
+      "marginLG": 0
+    },
+    "Input": {
+      "colorPrimaryHover": "#232ffd"
+    },
+    "Tooltip": {
+      "colorBgSpotlight": "#FFFFFF",
+      "colorText": "#FFFFFF",
+      "colorTextLightSolid": "#000000"
+    },
+    "Table": {
+      "footerBg": "#ffffff",
+      "rowSelectedHoverBg": "#EEFBFF"
+    },
+    "Tag": {
+      "borderRadiusSM": 20
+    }
+  }
+}

@@ -1,0 +1,86 @@
+:root {
+    --color-company-theme: #232ffd;
+}
+
+@tailwind base;
+
+/* roboto-regular */
+@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 400;
+    src: local(""),
+    url("./assets/fonts/Roboto/Roboto-Regular.woff2") format("woff2"),
+        /* Super Modern Browsers */ url("./assets/fonts/Roboto/Roboto-Regular.woff") format("woff"),
+        /* Modern Browsers */ url("./assets/fonts/Roboto/Roboto-Regular.ttf") format("truetype"); /* Safari, Android, iOS */
+}
+
+/* roboto-700 */
+@font-face {
+    font-family: "Roboto-700";
+    font-style: normal;
+    font-weight: 700;
+    src: local(""),
+    url("./assets/fonts/Roboto-700/Roboto-700.woff2") format("woff2"),
+        /* Super Modern Browsers */ url("./assets/fonts/Roboto-700/Roboto-700.woff") format("woff"),
+        /* Modern Browsers */ url("./assets/fonts/Roboto-700/Roboto-700.ttf") format("truetype"); /* Safari, Android, iOS */
+}
+
+@tailwind components;
+@tailwind utilities;
+
+/* @layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply text-primary;
+  }
+} */
+
+html,
+body,
+#root,
+#root > div {
+    height: 100%;
+}
+
+@layer base {
+    /* To override antd's a tag text color style */
+    a {
+        @apply !text-primary-text;
+    }
+}
+
+@layer components {
+    /* define class for the component defined in src/pages/notifications-centre/components/NotificationRow/NotificationRow.tsx */
+    .th-notification-row {
+        @apply mb-3 grid items-center bg-white px-7 py-5 shadow last:mb-0 grid-cols-1 w-full;
+    }
+
+    .th-notification-row.with-action-button {
+        @apply grid-cols-notification-export-row gap-x-6;
+    }
+
+    .th-ci-vi-score-button-container {
+        @apply h-[2.375rem] rounded-lg bg-[#245069] pb-[0.125rem];
+    }
+
+    .th-ci-vi-score-button {
+        @apply h-[2.25rem] shadow-ci-vi-score-button;
+    }
+
+    .th-content-section {
+        @apply grid !h-main-layout items-center overflow-y-hidden md:max-h-max;
+    }
+}
+
+
+/* Temp solution fixing antd4.0 style conflict */
+.ant-checkbox {
+    top: 0;
+}
+
+.anticon {
+    display: inline-flex !important;
+}

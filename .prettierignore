@@ -1,0 +1,14 @@
+node_modules
+coverage
+build
+dist
+**/__generated__
+pnpm-lock.yaml
+*.zip
+*.yml
+*.md
+*.log
+*.lock
+**/*.snap
+*.sh
+.*
