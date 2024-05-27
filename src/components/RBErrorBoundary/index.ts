@@ -1,0 +1,1 @@
+export { RBErrorBoundary } from "./RBErrorBoundary"

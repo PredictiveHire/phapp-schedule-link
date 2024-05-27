@@ -1,0 +1,163 @@
+# Environment availability for branches: https://predictivehire.atlassian.net/wiki/spaces/DEV/pages/2453111058/PH+Git+Flow+Guideline
+
+steps:
+  - label: "Run unit tests"
+    command:
+      - "pnpm install --frozen-lockfile"
+      - "pnpm test:ci"
+      - "pnpm test:report:zip"
+    artifact_paths:
+      - "coverage.zip"
+    plugins:
+      - docker#v5.9.0:
+          image: "predictivehireadmin/node-volta"
+          propagate-environment: true
+          volumes:
+            - "$HOME/.aws:/root/.aws:ro"
+    agents:
+      queue: "new-infra-large-instance"
+    branches:
+      - "!main"
+      - "!release/*"
+
+  - wait
+
+  - block: "Deploy to DEV"
+    branches:
+      - "develop"
+      - "bugfix/*"
+      - "hotfix/*"
+      - "feature/*"
+
+  - wait
+
+  - label: ":rocket: Push artifacts to s3 bucket of DEV environment"
+    branches:
+      - "develop"
+      - "bugfix/*"
+      - "hotfix/*"
+      - "feature/*"
+    command:
+      - "pnpm install --frozen-lockfile"
+      - "pnpm build"
+      - "pnpm exec zx ./.buildkite/deploy.mjs dev"
+    plugins:
+      - docker#v5.9.0:
+          image: "predictivehireadmin/node-volta"
+          environment:
+            - VITE_ENVIRONMENT=dev
+            - VITE_STAGE=dev
+            - VITE_ROLLBAR_TOKEN=7e923aad949942378012cc25dada7514
+          volumes:
+            - "$HOME/.aws:/root/.aws:ro"
+    agents:
+      queue: "new-infra-large-instance"
+
+  - wait
+
+  # - block: "Deploy to QA"
+  #   fields:
+  #     - select: "QA Preview Environments"
+  #       key: "deploy-qa-preview-envs"
+  #       hint: "Which QA preview environment should we deploy to? :eye:"
+  #       multiple: true
+  #       default: [ "qa" ]
+  #       options:
+  #         - label: "QA Default"
+  #           value: "qa"
+  #         - label: "QA Env 1"
+  #           value: "qa-env1"
+  #   branches:
+  #     - "develop"
+  #     - "hotfix/*"
+
+  # - wait
+
+  # - label: ":rocket: Push artifacts to s3 bucket of QA environment"
+  #   branches:
+  #     - "develop"
+  #     - "hotfix/*"
+  #   command:
+  #     - "./.buildkite/deploy.sh qa"
+  #   plugins:
+  #     - docker#v5.9.0:
+  #         image: "predictivehireadmin/node-awscli:18.16.0"
+  #         # important as we use buildkite-agent meta-data to determine which preview environment to deploy to
+  #         mount-buildkite-agent: true
+  #         environment:
+  #           - VITE_ENVIRONMENT=qa
+  #           - VITE_STAGE=qa
+  #           - VITE_ROLLBAR_TOKEN=03a930563321486781b69f92b1862519
+  #           - VITE_INTERCOM_APP_ID=fblmptt1
+  #           - VITE_HEAP_ID=1575757007
+  #           - VITE_HOTJAR_ID=3694749
+  #           - VITE_LD_CLIENT_ID=654d486b165df3126ac60fb2
+  #           - VITE_GOOGLE_MAP_API_KEY=AIzaSyAhZvYf0R2LqDA8HchRJuw4Okt8oEtP5SA
+  #         volumes:
+  #           - "$HOME/.aws:/root/.aws:ro"
+  #   agents:
+  #     queue: "new-infra-large-instance"
+
+  # - wait
+
+  # - block: "Deploy to Sandbox"
+  #   branches:
+  #     - "rollback/*"
+  #     - "hotfix/*"
+
+  # - wait
+
+  # - label: ":rocket: Push artifacts to s3 bucket of Sandbox environment"
+  #   branches:
+  #     - "rollback/*"
+  #     - "hotfix/*"
+  #   command:
+  #     - "./.buildkite/deploy.sh sandbox"
+  #   plugins:
+  #     - docker#v5.9.0:
+  #         image: "predictivehireadmin/node-awscli:18.16.0"
+  #         environment:
+  #           - VITE_ENVIRONMENT=sandbox
+  #           - VITE_STAGE=sandbox
+  #           - VITE_ROLLBAR_TOKEN=03a930563321486781b69f92b1862519
+  #           - VITE_INTERCOM_APP_ID=fblmptt1
+  #           - VITE_HEAP_ID=1126543068
+  #           - VITE_HOTJAR_ID=3694752
+  #           - VITE_LD_CLIENT_ID=654c73f0365a3c12d9aa007e
+  #           - VITE_GOOGLE_MAP_API_KEY=AIzaSyAhZvYf0R2LqDA8HchRJuw4Okt8oEtP5SA
+  #         volumes:
+  #           - "$HOME/.aws:/root/.aws:ro"
+  #   agents:
+  #     queue: "new-infra-large-instance"
+
+  # - wait
+
+  # - block: "Deploy to Production"
+  #   branches:
+  #     - "rollback/*"
+  #     - "hotfix/*"
+
+  # - wait
+
+  # - label: ":rocket: Push artifacts to s3 bucket of Production environment"
+  #   branches:
+  #     - "rollback/*"
+  #     - "hotfix/*"
+  #   command:
+  #     - "./.buildkite/deploy.sh product"
+  #   plugins:
+  #     - docker#v5.9.0:
+  #         image: "predictivehireadmin/node-awscli:18.16.0"
+  #         environment:
+  #           - VITE_ENVIRONMENT=production
+  #           - VITE_STAGE=product
+  #           - VITE_ROLLBAR_TOKEN=03a930563321486781b69f92b1862519
+  #           - VITE_INTERCOM_APP_ID=b65nv99l
+  #           - VITE_HEAP_ID=780692599
+  #           - VITE_HOTJAR_ID=3694753
+  #           - VITE_LD_CLIENT_ID=654d487de098e71289cda5f0
+  #           - VITE_GOOGLE_MAP_API_KEY=AIzaSyAhZvYf0R2LqDA8HchRJuw4Okt8oEtP5SA
+  #         volumes:
+  #           - "$HOME/.aws:/root/.aws:ro"
+  #   agents:
+  #     queue: "new-infra-large-instance"

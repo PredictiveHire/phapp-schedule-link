@@ -1,0 +1,51 @@
+name: Github Actions
+
+on: [pull_request]
+
+jobs:
+  rebase-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout current branch
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Rebase before merging?
+        uses: cyberark/enforce-rebase@v2
+        with:
+          default-branch: ${{ github.base_ref }}
+  lint-check:
+    runs-on: ubuntu-latest
+    container: predictivehireadmin/node-volta
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Lint Check
+        run: pnpm lint
+  unit-test:
+    runs-on: ubuntu-latest
+    container: predictivehireadmin/node-volta
+    permissions:
+      contents: read # Required to checkout the code
+      pull-requests: write # Required to comment on the PR
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Unit Test
+        run: pnpm test:ci
+      - name: Report Coverage
+         # Also generate the report if tests are failing
+        if: always()
+        uses:  davelosert/vitest-coverage-report-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

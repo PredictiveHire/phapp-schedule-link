@@ -10,27 +10,23 @@ module.exports = {
     es2020: true,
   },
   extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking',
-    'plugin:react-hooks/recommended',
-    'plugin:prettier/recommended',
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:react-hooks/recommended",
+    "plugin:prettier/recommended",
   ],
   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
+    ecmaVersion: "latest",
+    sourceType: "module",
+    project: ["./tsconfig.json", "./tsconfig.node.json"],
     tsconfigRootDir: __dirname,
   },
-  plugins: ['react-refresh',"simple-import-sort", "import", "unused-imports"],
-  parser: '@typescript-eslint/parser',
+  plugins: ["react-refresh", "simple-import-sort", "import", "unused-imports"],
+  parser: "@typescript-eslint/parser",
   rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
-    '@typescript-eslint/no-non-null-assertion': 'off',
-    '@typescript-eslint/ban-types': 'warn',
+    "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+    "@typescript-eslint/no-non-null-assertion": "off",
     "no-console": "warn",
     eqeqeq: ["warn", "always"],
     "no-empty-function": "off",
@@ -49,12 +45,12 @@ module.exports = {
     "import/no-useless-path-segments": ["error"],
     "@typescript-eslint/ban-types": ["error", { types: { Function: false, Object: false } }],
     "unused-imports/no-unused-imports": "warn",
-    curly: ["warn", "all"]
+    curly: ["warn", "all"],
   },
   overrides: [
     {
-      files: ['*.ts', '*.tsx'],
-      parser: '@typescript-eslint/parser',
+      files: ["*.ts", "*.tsx"],
+      parser: "@typescript-eslint/parser",
     },
   ],
-};
+}

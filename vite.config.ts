@@ -1,10 +1,10 @@
 /// <reference types="vitest" />
 /// <reference types="vite/client" />
 
-import { defineConfig } from "vite"
+import react from "@vitejs/plugin-react-swc"
 import fs from "fs"
 import path from "path"
-import react from "@vitejs/plugin-react-swc"
+import { defineConfig } from "vite"
 import tsconfigPaths from "vite-tsconfig-paths"
 
 // https://vitejs.dev/config/
@@ -39,20 +39,16 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: "./src/test/setup.ts",
-    globalSetup: "./vitest.global-setup.ts",
+    globalSetup: "./vitest/vitest.setup.ts",
     // you might want to disable it, if you don't have tests that rely on CSS
     // since parsing CSS is slow
     css: false,
+    include: ["src/**/*.ts", "src/**/*.tsx"],
+    exclude: ["coverage/**"],
     coverage: {
       provider: "istanbul",
-      exclude: [
-        "node_modules/",
-        "src/setupTests.ts",
-        "src/__generated__",
-        "src/config/",
-        "**/mockData.ts",
-        "src/**/mockData/*",
-      ],
+      include: ["src/**/*.ts", "src/**/*.tsx"],
+      exclude: ["src/__generated__", "src/config/", "src/**/mockData/*"],
       // you can include other reporters, but 'json-summary' is required, json is recommended
       reporter: ["text", "json-summary", "json"],
     },
