@@ -2,6 +2,8 @@
 
 The link page to schedule interview for Interviewer/Candidates
 
+[![Build status](https://badge.buildkite.com/fcef6e4cd42f715e31d5780d70b8ffdc2a4c1f9d5dc280eefc.svg)](https://buildkite.com/predictive-hire/app-phapp-schedule-link)
+
 ## Prepare
 
 ### Volta (only once globally)
@@ -58,4 +60,4 @@ npm run schema:publish:local
 ```bash
 # run codegen in talent hub repo
 pnpm codegen
-```# phapp-schedule-link
+```

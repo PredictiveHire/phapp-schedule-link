@@ -27,4 +27,4 @@ dist-ssr
 coverage/
 .env
 build/
-dev-certs/
+.eslintcache

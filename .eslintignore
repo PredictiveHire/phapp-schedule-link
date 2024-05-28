@@ -5,3 +5,4 @@ node_modules
 **/__generated__
 *.mjs
 vite-env.d.ts
+vite.config.ts
