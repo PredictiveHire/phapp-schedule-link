@@ -1,14 +1,13 @@
 import { ApolloLink, from } from "@apollo/client"
 
-import { errorLink } from "./error.link"
 import { httpLink } from "./http.link"
 
 export const directionalLink = new ApolloLink((operation, forward) => {
   return forward(operation)
 }).split(
-  (operation) => {
+  (_operation) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { operationName } = operation
+    // const { operationName } = operation
 
     // If the operation name no needs to refresh token, then no need to refresh token
     // if ([...noRefreshTokenOperationName].includes(operationName)) {
@@ -23,6 +22,6 @@ export const directionalLink = new ApolloLink((operation, forward) => {
     return true
   },
   // httpLink must be on the right side to initialize the request path
-  from([errorLink, httpLink]),
-  from([errorLink, httpLink])
+  from([httpLink]),
+  from([httpLink])
 )

@@ -1,5 +1,3 @@
-export * from "./apolloVars"
-export * from "./phone"
 export * from "./region"
 
 export const STAGE = import.meta.env.VITE_STAGE || ""

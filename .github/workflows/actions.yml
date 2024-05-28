@@ -28,24 +28,27 @@ jobs:
       - name: Lint Check
         run: pnpm lint
   unit-test:
+    permissions: write-all
     runs-on: ubuntu-latest
     container: predictivehireadmin/node-volta
-    permissions:
-      contents: read # Required to checkout the code
-      pull-requests: write # Required to comment on the PR
     steps:
-      - name: Checkout Repo
+      - name: Checkout current branch
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
-      - name: Install Dependencies
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Unit Test
-        run: pnpm test:ci
-      - name: Report Coverage
-         # Also generate the report if tests are failing
+      - name: Get changed files
+        id: changed-files-as-space-delimited
+        uses: jitterbit/get-changed-files@v1
+      - name: Incremental Unit Test
+        run: pnpm test:incremental --findRelatedTests ${{ steps.changed-files-as-space-delimited.outputs.all }}
+      - uses: romeovs/lcov-reporter-action@v0.3.1
+        # run even if last step fails
         if: always()
-        uses:  davelosert/vitest-coverage-report-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          lcov-file: ./ci/coverage/lcov.info
+          delete-old-comments: true
+          title: Coverage Report for Modified Files Only of Current PR

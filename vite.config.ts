@@ -31,26 +31,4 @@ export default defineConfig({
       },
     },
   },
-  define: {
-    "process.env": {},
-  },
-  // Config for vitest
-  test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: "./src/test/setup.ts",
-    globalSetup: "./vitest/vitest.setup.ts",
-    // you might want to disable it, if you don't have tests that rely on CSS
-    // since parsing CSS is slow
-    css: false,
-    include: ["src/**/*.ts", "src/**/*.tsx"],
-    exclude: ["coverage/**"],
-    coverage: {
-      provider: "istanbul",
-      include: ["src/**/*.ts", "src/**/*.tsx"],
-      exclude: ["src/__generated__", "src/config/", "src/**/mockData/*"],
-      // you can include other reporters, but 'json-summary' is required, json is recommended
-      reporter: ["text", "json-summary", "json"],
-    },
-  },
 })
