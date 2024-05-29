@@ -6,3 +6,4 @@ node_modules
 *.mjs
 vite-env.d.ts
 vite.config.ts
+jest/

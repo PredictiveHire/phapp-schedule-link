@@ -26,5 +26,11 @@ dist-ssr
 
 coverage/
 .env
+.env.*
+!.env.example
+!.env.test
 build/
 .eslintcache
+dev-certs
+
+ci/

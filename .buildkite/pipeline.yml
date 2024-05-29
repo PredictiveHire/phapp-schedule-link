@@ -4,7 +4,7 @@ steps:
   - label: "Run unit tests"
     command:
       - "pnpm install --frozen-lockfile"
-      - "pnpm test:ci"
+      - "pnpm test"
       - "pnpm test:report:zip"
     artifact_paths:
       - "coverage.zip"

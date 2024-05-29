@@ -11,4 +11,3 @@ export const getApiPath = (): string => {
   const apiPath = `/api/${awsRegion}/graphql`
   return apiPath
 }
-//
