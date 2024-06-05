@@ -1,0 +1,42 @@
+.interviewTimeSlotBookingWrapper > :global(.ant-radio-group .ant-radio-button-wrapper) {
+    height: 52px;
+    line-height: 52px;
+    border: 1px solid rgba(140, 140, 140, 1);
+    border-radius: 8px;
+    margin-top: 10px;
+}
+.interviewTimeSlotBookingWrapper > :global(.ant-radio-group .ant-radio-button-wrapper:first-child){
+    border-radius: 8px;
+}
+
+
+.interviewTimeSlotBookingWrapper > :global(.buttonBook.css-dev-only-do-not-override-cm12gd.ant-btn),
+.interviewTimeSlotBookingWrapper > :global(.buttonBook.css-dev-only-do-not-override-cm12gd.ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover) {
+    height: 49px;
+    background: var(--colorBgContainerDisabled, rgba(0, 0, 0, 0.07));
+    box-shadow: 0px 3px 30px 1px rgba(170, 170, 170, 0.25);
+    border-radius: 90px;
+    line-height: 49px;
+    color: rgba(0, 0, 0, 0.5);
+    padding: 0;
+    border: none;
+}
+.interviewTimeSlotBookingWrapper > :global(.buttonBook.css-dev-only-do-not-override-cm12gd.ant-btn.active),
+.interviewTimeSlotBookingWrapper > :global(.buttonBook.active.css-dev-only-do-not-override-cm12gd.ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover)  {
+    background: #000000;
+    box-shadow: 0px 3px 30px 1px #AAAAAA33;
+    color: #ffffff;
+}
+
+.interviewTimeSlotBookingWrapper > :global(.ant-radio-group .ant-radio-button-wrapper:not(:first-child)::before) {
+    display: none;
+}
+
+.interviewTimeSlotBookingWrapper > :global(.ant-radio-group .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover),
+.interviewTimeSlotBookingWrapper > :global(.ant-radio-group .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):active),
+.interviewTimeSlotBookingWrapper > :global(.ant-radio-group .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)),
+.interviewTimeSlotBookingWrapper > :global(.ant-radio-group .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child) {
+    color: #000000;
+    font-weight: 600;
+    border: 2px solid var(--colorSapiaPink, #FFCEFF)
+}
