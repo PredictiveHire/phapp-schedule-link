@@ -3,6 +3,7 @@ import { Calendar } from "antd"
 import type { Dayjs } from "dayjs"
 import React from "react"
 
+import { InvalidLinkPage } from "@/pages/InvalidLinkPage"
 import { cn } from "@/utils"
 
 import logoSvg from "../../../../assets/images/ww-logo.svg"
@@ -29,6 +30,7 @@ export const MobileCandidateSelectInterviewTime = () => {
     disabledDate,
     clickDate,
     interviewDates,
+    isLinkInvalid,
   } = useInterviewDate()
 
   const headerRender = ({ value, onChange }: { value: Dayjs; onChange: (date: Dayjs) => void }) => (
@@ -56,6 +58,10 @@ export const MobileCandidateSelectInterviewTime = () => {
       <div className="rounded-full">{value.date()}</div>
     </div>
   )
+
+  if (isLinkInvalid) {
+    return <InvalidLinkPage />
+  }
 
   return (
     <div
