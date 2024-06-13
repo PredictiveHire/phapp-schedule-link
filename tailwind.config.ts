@@ -111,6 +111,7 @@ export default {
         "ranking-banner": "74px",
         "desktop-job-requisitions-global-search": "20.75rem",
         "ci-score-button": "7.8125rem",
+        "invalid-link-container": "68.125rem",
       },
       height: {
         "logo-container": "3rem",
