@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
-import { AWSRegion, AWSShortRegion } from "@/constants"
+import { AWSRegion, AWSShortRegion } from "../constants/region"
 
 export const getRegionFullName = (regionShortName: string): string => {
   switch (regionShortName) {

@@ -1,22 +1,45 @@
-import { render, screen } from "@testing-library/react"
-import { BrowserRouter } from "react-router-dom"
+import { PHIcon } from "@ph/ui"
+import { render } from "@testing-library/react"
+
+import { cn } from "@/utils"
 
 import NotFoundPage from "../NotFoundPage"
 
-function renderWithRouter() {
-  return render(
-    <BrowserRouter>
-      <NotFoundPage />
-    </BrowserRouter>
-  )
-}
+// Mock the PHIcon component
+jest.mock("@ph/ui", () => ({
+  PHIcon: jest.fn(() => <div>PHIcon Mock</div>),
+}))
+
+// Mock the cn utility
+jest.mock("@/utils", () => ({
+  cn: jest.fn(() => "mocked-class"),
+}))
 
 describe("NotFoundPage", () => {
-  it("should show 404 title and notfound icon", () => {
-    renderWithRouter()
-    const pageTitle = screen.getByText("404 Not Found")
-    const notFoundIcon = screen.getByRole("img", { name: "notFound" })
-    expect(pageTitle).toBeInTheDocument()
-    expect(notFoundIcon).toBeInTheDocument()
+  it("renders without crashing", () => {
+    const { container } = render(<NotFoundPage />)
+    expect(container).toBeInTheDocument()
+  })
+
+  it("displays the correct title and subtitle", () => {
+    const { getByText } = render(<NotFoundPage />)
+    expect(getByText("404 Not Found")).toBeInTheDocument()
+    expect(getByText("Sorry, we can't find what you're looking for")).toBeInTheDocument()
+  })
+
+  it("renders the PHIcon with correct props", () => {
+    render(<NotFoundPage />)
+    expect(PHIcon).toHaveBeenCalledWith({ size: 200, name: "notFound" }, {})
+  })
+
+  it("applies the heightClass prop correctly", () => {
+    const heightClass = "h-full"
+    render(<NotFoundPage heightClass={heightClass} />)
+    expect(cn).toHaveBeenCalledWith("pt-10", heightClass)
+  })
+
+  it("applies the default class name when no heightClass is provided", () => {
+    render(<NotFoundPage />)
+    expect(cn).toHaveBeenCalledWith("pt-10", "")
   })
 })

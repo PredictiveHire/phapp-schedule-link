@@ -156,6 +156,7 @@ export default {
         active: "4px -2px 6px -4px rgba(0, 0, 0, 0.4);",
         "input-focus": "0 0 0 2px rgba(12, 198, 255, 0.07);",
         "ci-vi-score-button": "5px 5px 10px 0px rgba(147, 147, 147, 0.20);", // CI result button width, which is from the design spec
+        card: "0px 3px 10px 1px rgba(170, 170, 170, 0.20);",
       },
       minWidth: {
         "profile-item": "16px",

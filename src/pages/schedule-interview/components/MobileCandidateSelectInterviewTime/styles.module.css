@@ -1,0 +1,7 @@
+.candidateSelectInterviewTimeWrapper :global(.ant-picker-calendar .ant-picker-cell-disabled::before),
+.candidateSelectInterviewTimeWrapper :global(.ant-picker-calendar .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before) {
+    display: none;
+}
+.candidateSelectInterviewTimeWrapper :global(.ant-picker-calendar .ant-picker-cell .ant-picker-cell-inner) {
+    border-radius: 100% !important;
+}
