@@ -33,6 +33,9 @@ export const useInterviewDate = () => {
     }
   }
 
+  // todo: replace with the data returned from the backend
+  const isLinkInvalid = false
+
   return {
     showTimeSlotBooking,
     setShowTimeSlotBooking,
@@ -42,5 +45,6 @@ export const useInterviewDate = () => {
     disabledDate,
     clickDate,
     interviewDates,
+    isLinkInvalid,
   }
 }
