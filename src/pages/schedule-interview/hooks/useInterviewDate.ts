@@ -2,17 +2,10 @@ import type { Dayjs } from "dayjs"
 import dayjs from "dayjs"
 import { useState } from "react"
 
-export const useDesktopInterviewDate = () => {
-  // TODO: Mock data from backend
-  const interviewDates = [
-    { start: "2024-06-01T08:00:00.000Z", end: "2024-06-01T09:00:00.000Z" },
-    { start: "2024-06-01T09:00:00.000Z", end: "2024-06-01T10:00:00.000Z" },
-    { start: "2024-06-02T00:00:00.000Z", end: "2024-06-02T01:00:00.000Z" },
-    { start: "2024-06-03T00:00:00.000Z", end: "2024-06-03T01:00:00.000Z" },
-    { start: "2024-06-18T00:00:00.000Z", end: "2024-06-18T01:00:00.000Z" },
-    { start: "2024-06-19T00:00:00.000Z", end: "2024-06-19T01:00:00.000Z" },
-  ]
+import { useScheduleInterview } from "./useScheduleInterview"
 
+export const useInterviewDate = () => {
+  const { interviewDates } = useScheduleInterview()
   const initialInterviewDate = dayjs(interviewDates[0].start)
   const [interviewDate, setInterviewDate] = useState<Dayjs>(initialInterviewDate)
 
@@ -28,7 +21,7 @@ export const useDesktopInterviewDate = () => {
 
   const disabledDate = (date: Dayjs) => !isInterviewDate(date)
 
-  const clickDate = (date: Dayjs) => {
+  const handleDateChange = (date: Dayjs) => {
     if (isInterviewDate(date)) {
       setInterviewDate(date)
     }
@@ -40,7 +33,7 @@ export const useDesktopInterviewDate = () => {
     setInterviewDate,
     isInterviewDate,
     disabledDate,
-    clickDate,
+    handleDateChange,
     interviewDates,
   }
 }

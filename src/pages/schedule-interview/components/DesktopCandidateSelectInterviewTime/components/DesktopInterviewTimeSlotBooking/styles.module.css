@@ -46,14 +46,17 @@
 .interviewTimeSlotBookingWrapper :global(.ant-picker-calendar .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before) {
     display: none;
 }
-.interviewTimeSlotBookingWrapper :global(.ant-picker-calendar .ant-picker-cell .ant-picker-cell-inner) {
-    border-radius: 100% !important;
+.interviewTimeSlotBookingWrapper .interviewTimeSlotBookingCalendar:global(.ant-picker-calendar .ant-picker-cell .ant-picker-cell-inner) {
+    border-radius: 100%;
+}
+.interviewTimeSlotBookingWrapper .interviewTimeSlotBookingCalendar:global(.ant-picker-calendar .ant-picker-cell) {
+    padding: 0;
 }
 
 /* today without time slot */
-.interviewTimeSlotBookingWrapper :global(.ant-picker-calendar .ant-picker-cell.ant-picker-cell-today .ant-picker-cell-inner) {
+.interviewTimeSlotBookingWrapper .interviewTimeSlotBookingCalendar:global(.ant-picker-calendar .ant-picker-cell.ant-picker-cell-today .ant-picker-cell-inner) {
     border: 1px solid rgba(0, 0, 0, 0.5);
-    color: rgba(0, 0, 0, 0.5) !important;
+    color: rgba(0, 0, 0, 0.5);
     background: transparent;
     box-sizing: content-box;
 }

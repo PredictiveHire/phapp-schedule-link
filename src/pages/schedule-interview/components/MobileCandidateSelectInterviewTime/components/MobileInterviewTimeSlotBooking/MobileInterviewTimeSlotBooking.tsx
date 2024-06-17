@@ -2,14 +2,17 @@ import { ArrowLeftOutlined, LeftOutlined, RightOutlined } from "@ant-design/icon
 import { Button } from "antd"
 import { Dayjs } from "dayjs"
 import React from "react"
+import { useParams } from "react-router-dom"
 
+import { useInterviewDateChange } from "@/pages/schedule-interview/components/MobileCandidateSelectInterviewTime/hooks/useInterviewDateChange"
+import { SelectTimeSlotsRadioGroup } from "@/pages/schedule-interview/components/SelectTimeSlotsRadioGroup/SelectTimeSlotsRadioGroup"
+import { useBookInterviewNow } from "@/pages/schedule-interview/hooks/useBookInterviewNow"
+import { useFormatTimeSlots } from "@/pages/schedule-interview/hooks/useFormatTimeSlots"
+import { useSelectTimeSlot } from "@/pages/schedule-interview/hooks/useSelectTimeSlot"
+import { InterviewTimeSlot } from "@/pages/schedule-interview/type"
 import { cn } from "@/utils"
 import { formatDateToLongString, getFormattedDate } from "@/utils/dateTime"
 
-import { useTimeSlots } from "../../../../hooks/useTimeSlots"
-import { InterviewTimeSlot } from "../../../../type"
-import { SelectTimeSlotsRadioGroup } from "../../../SelectTimeSlotsRadioGroup/SelectTimeSlotsRadioGroup"
-import { useInterviewBooking } from "../../hooks/useInterviewBooking"
 import styles from "./styles.module.css"
 
 export interface InterviewTimeSlotBookingProps {
@@ -26,19 +29,26 @@ export const MobileInterviewTimeSlotBooking: React.FC<InterviewTimeSlotBookingPr
   const availableDates = [
     ...new Set(interviewTimes.map((slot: InterviewTimeSlot) => getFormattedDate(new Date(slot.start)))),
   ].sort()
+  const { currentDate, handleDateChange, isLeftArrowDisabled, isRightArrowDisabled } = useInterviewDateChange({
+    initialDate,
+    availableDates,
+  })
+
   const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-  const {
-    currentDate,
-    selectedDateAndTime,
-    selectedTime,
-    handleDateChange,
-    handleTimeSlotChange,
-    handleBookInterviewNow,
-    isLeftArrowDisabled,
-    isRightArrowDisabled,
-  } = useInterviewBooking({ initialDate, availableDates })
-  const { formatTimeSlots } = useTimeSlots()
+  const { selectedTimeSlotId, handleTimeSlotChange } = useSelectTimeSlot()
+  const { handleBookInterviewNow, isBookCandidateInterviewLoading } = useBookInterviewNow()
+
+  const { formatTimeSlots } = useFormatTimeSlots()
   const timeSlots = formatTimeSlots(interviewTimes, currentDate)
+
+  const { shortcode = "" } = useParams()
+  const handleClickBookInterviewNow = () => {
+    void handleBookInterviewNow({
+      timeslotId: selectedTimeSlotId || "",
+      shortcode: shortcode,
+      candidateTimezone: userTimezone,
+    })
+  }
 
   return (
     <div
@@ -73,17 +83,13 @@ export const MobileInterviewTimeSlotBooking: React.FC<InterviewTimeSlotBookingPr
       </div>
       <SelectTimeSlotsRadioGroup
         timeSlots={timeSlots}
-        selectedTime={selectedTime}
-        selectedDateAndTime={selectedDateAndTime}
+        selectedTimeSlotId={selectedTimeSlotId}
         handleTimeSlotChange={handleTimeSlotChange}
-        currentDate={currentDate}
       />
       <Button
-        className={cn([
-          "buttonBook mt-4 w-full text-base font-normal",
-          selectedDateAndTime.selectedTime ? "active" : "",
-        ])}
-        onClick={handleBookInterviewNow}
+        className={cn(["buttonBook mt-4 w-full text-base font-normal", selectedTimeSlotId ? "active" : ""])}
+        onClick={handleClickBookInterviewNow}
+        loading={isBookCandidateInterviewLoading}
       >
         Book interview now
       </Button>

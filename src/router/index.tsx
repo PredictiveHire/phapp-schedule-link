@@ -6,7 +6,7 @@ import { ScheduleInterviewPage } from "@/pages/schedule-interview/ScheduleInterv
 
 export const router = createBrowserRouter([
   {
-    path: "/:shortcode",
+    path: "/:awsRegion/:shortcode",
     index: true,
     errorElement: <RBErrorBoundary />,
     element: <ScheduleInterviewPage />,
