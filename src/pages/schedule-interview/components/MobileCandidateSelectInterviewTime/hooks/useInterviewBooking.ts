@@ -31,7 +31,7 @@ export const useInterviewBooking = ({
     }
   }
 
-  const handleTimeChange = (time: string) => {
+  const handleTimeSlotChange = (time: string) => {
     setSelectedDateAndTime({
       selectedDate: currentDate,
       selectedTime: time,
@@ -53,7 +53,7 @@ export const useInterviewBooking = ({
     selectedDateAndTime,
     selectedTime,
     handleDateChange,
-    handleTimeChange,
+    handleTimeSlotChange,
     handleBookInterviewNow,
     isLeftArrowDisabled,
     isRightArrowDisabled,

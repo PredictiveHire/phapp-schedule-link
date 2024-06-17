@@ -1,8 +1,11 @@
+import type { Dayjs } from "dayjs"
 import dayjs from "dayjs"
 
-import { InterviewTimeSlot } from "@/pages/schedule-interview/components/MobileCandidateSelectInterviewTime/type"
+import { InterviewTimeSlot } from "@/pages/schedule-interview/type"
 
 export const getFormattedDate = (date: Date, format: string = "YYYY-MM-DD"): string => dayjs(date).format(format)
+
+export const formatDayjs = (date: Dayjs, format: string = "YYYY-MM-DD"): string => date.format(format)
 
 export const formatDateToLongString = (date: Date, timeZone?: string): string => {
   const dateFormatOptions: Intl.DateTimeFormatOptions = {

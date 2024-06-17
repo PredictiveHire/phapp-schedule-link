@@ -1,14 +1,15 @@
-import { ArrowLeftOutlined, CheckCircleFilled, LeftOutlined, RightOutlined } from "@ant-design/icons"
-import { Button, Radio } from "antd"
+import { ArrowLeftOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons"
+import { Button } from "antd"
 import { Dayjs } from "dayjs"
 import React from "react"
 
 import { cn } from "@/utils"
 import { formatDateToLongString, getFormattedDate } from "@/utils/dateTime"
 
+import { useTimeSlots } from "../../../../hooks/useTimeSlots"
+import { InterviewTimeSlot } from "../../../../type"
+import { SelectTimeSlotsRadioGroup } from "../../../SelectTimeSlotsRadioGroup/SelectTimeSlotsRadioGroup"
 import { useInterviewBooking } from "../../hooks/useInterviewBooking"
-import { useTimeSlots } from "../../hooks/useTimeSlots"
-import { InterviewTimeSlot } from "../../type"
 import styles from "./styles.module.css"
 
 export interface InterviewTimeSlotBookingProps {
@@ -31,7 +32,7 @@ export const MobileInterviewTimeSlotBooking: React.FC<InterviewTimeSlotBookingPr
     selectedDateAndTime,
     selectedTime,
     handleDateChange,
-    handleTimeChange,
+    handleTimeSlotChange,
     handleBookInterviewNow,
     isLeftArrowDisabled,
     isRightArrowDisabled,
@@ -70,16 +71,13 @@ export const MobileInterviewTimeSlotBooking: React.FC<InterviewTimeSlotBookingPr
           disabled={isRightArrowDisabled}
         />
       </div>
-      <Radio.Group className="w-full" onChange={(e) => handleTimeChange(e.target.value as string)} value={selectedTime}>
-        {timeSlots.map((slot: string) => (
-          <Radio.Button key={slot} value={slot} className="w-full px-5 text-left text-black">
-            {selectedDateAndTime.selectedTime === slot && selectedDateAndTime.selectedDate === currentDate && (
-              <CheckCircleFilled className="checkCircleFilled mr-3 rounded-full bg-[#FFCEFF] text-black" />
-            )}
-            {slot}
-          </Radio.Button>
-        ))}
-      </Radio.Group>
+      <SelectTimeSlotsRadioGroup
+        timeSlots={timeSlots}
+        selectedTime={selectedTime}
+        selectedDateAndTime={selectedDateAndTime}
+        handleTimeSlotChange={handleTimeSlotChange}
+        currentDate={currentDate}
+      />
       <Button
         className={cn([
           "buttonBook mt-4 w-full text-base font-normal",

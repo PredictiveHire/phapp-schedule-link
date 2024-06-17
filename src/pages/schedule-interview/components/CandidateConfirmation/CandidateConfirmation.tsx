@@ -5,10 +5,7 @@ import React from "react"
 
 import { CandidateConfirmationInfo } from "@/pages/schedule-interview/components/CandidateConfirmation/CandidateConfirmationInfo"
 import { useCandidateConfirmation } from "@/pages/schedule-interview/components/CandidateConfirmation/hooks/useCandidateConfirmation"
-import {
-  LIInterviewMode,
-  LIInterviewModeLabel,
-} from "@/pages/schedule-interview/components/MobileCandidateSelectInterviewTime/constants"
+import { LIInterviewMode, LIInterviewModeLabel } from "@/pages/schedule-interview/constants"
 import { formatDateToLongString, formatDateToTimeString } from "@/utils/dateTime"
 
 const { useBreakpoint } = Grid

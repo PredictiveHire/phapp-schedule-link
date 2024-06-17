@@ -3,10 +3,7 @@ import React from "react"
 
 import { CandidateConfirmation } from "@/pages/schedule-interview/components/CandidateConfirmation"
 import { useCandidateConfirmation } from "@/pages/schedule-interview/components/CandidateConfirmation/hooks/useCandidateConfirmation"
-import {
-  LIInterviewMode,
-  LIInterviewModeLabel,
-} from "@/pages/schedule-interview/components/MobileCandidateSelectInterviewTime/constants"
+import { LIInterviewMode, LIInterviewModeLabel } from "@/pages/schedule-interview/constants"
 
 jest.mock("antd", () => {
   const actual = jest.requireActual<Record<string, unknown>>("antd")
