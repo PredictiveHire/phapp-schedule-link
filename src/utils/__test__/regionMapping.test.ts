@@ -1,6 +1,5 @@
+import { AWSRegion, AWSShortRegion } from "@/constants/region"
 import { getRegionFullName, getRegionShortName, isRegionShortNameMatch } from "@/utils/regionMapping"
-
-import { AWSRegion, AWSShortRegion } from "../../constants/region"
 
 describe("Region Utilities", () => {
   describe("getRegionFullName", () => {

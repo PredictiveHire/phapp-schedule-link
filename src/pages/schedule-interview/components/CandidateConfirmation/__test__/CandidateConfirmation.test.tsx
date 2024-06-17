@@ -2,8 +2,12 @@ import { render, screen } from "@testing-library/react"
 import React from "react"
 
 import { CandidateConfirmation } from "@/pages/schedule-interview/components/CandidateConfirmation"
-import { useCandidateConfirmation } from "@/pages/schedule-interview/components/CandidateConfirmation/hooks/useCandidateConfirmation"
 import { LIInterviewMode, LIInterviewModeLabel } from "@/pages/schedule-interview/constants"
+import { useScheduleInterview } from "@/pages/schedule-interview/hooks/useScheduleInterview"
+import {
+  interviewInfo,
+  mockScheduleInterviewContext,
+} from "@/pages/schedule-interview/mock/mockScheduleInterviewContext"
 
 jest.mock("antd", () => {
   const actual = jest.requireActual<Record<string, unknown>>("antd")
@@ -14,25 +18,11 @@ jest.mock("antd", () => {
     },
   }
 })
-jest.mock("../hooks/useCandidateConfirmation")
+jest.mock("@/pages/schedule-interview/hooks/useScheduleInterview")
 
-const interviewData = {
-  jobRequisitionName: "Software Engineer",
-  interviewMode: LIInterviewMode.IN_PERSON,
-  timezone: "America/New_York",
-  interviewTime: {
-    start: "2024-06-14T13:00:00Z",
-    end: "2024-06-14T14:00:00Z",
-  },
-  interviewAddress: "7 Kent Street",
-  interviewLink: "",
-}
-
-const mockUseCandidateConfirmation = (
-  useCandidateConfirmation as jest.MockedFunction<typeof useCandidateConfirmation>
-).mockReturnValue({
-  interviewData,
-})
+const mockUseScheduleInterview = (
+  useScheduleInterview as jest.MockedFunction<typeof useScheduleInterview>
+).mockReturnValue(mockScheduleInterviewContext)
 
 describe("CandidateConfirmation", () => {
   it("renders the component correctly", () => {
@@ -41,22 +31,23 @@ describe("CandidateConfirmation", () => {
     expect(screen.getByText("Friday, June 14 09:00 AM")).toBeInTheDocument()
     expect(screen.getByText("10:00 AM")).toBeInTheDocument()
     expect(screen.getByText("Please check your email for more details.")).toBeInTheDocument()
-    expect(screen.getByText(interviewData.jobRequisitionName)).toBeInTheDocument()
-    expect(screen.getByText(LIInterviewModeLabel[interviewData.interviewMode])).toBeInTheDocument()
-    expect(screen.getByText(interviewData.interviewAddress)).toBeInTheDocument()
-    expect(screen.getByText(interviewData.timezone)).toBeInTheDocument()
+    expect(screen.getByText(interviewInfo.jobRequisitionName)).toBeInTheDocument()
+    expect(screen.getByText(LIInterviewModeLabel[interviewInfo.interviewMode])).toBeInTheDocument()
+    expect(screen.getByText(interviewInfo.interviewAddress)).toBeInTheDocument()
+    expect(screen.getByText(interviewInfo.timezone)).toBeInTheDocument()
   })
 
   it("displays the correct interview mode and location for in-person interview", () => {
     render(<CandidateConfirmation />)
     expect(screen.getByText("In person")).toBeInTheDocument()
-    expect(screen.getByText(interviewData.interviewAddress)).toBeInTheDocument()
+    expect(screen.getByText(interviewInfo.interviewAddress)).toBeInTheDocument()
   })
 
   it("displays the correct interview mode and link for online interview", () => {
-    mockUseCandidateConfirmation.mockReturnValue({
-      interviewData: {
-        ...interviewData,
+    mockUseScheduleInterview.mockReturnValue({
+      ...mockScheduleInterviewContext,
+      interviewInfo: {
+        ...interviewInfo,
         interviewMode: LIInterviewMode.ONLINE,
         interviewAddress: "",
         interviewLink: "https://example.com/interview",
