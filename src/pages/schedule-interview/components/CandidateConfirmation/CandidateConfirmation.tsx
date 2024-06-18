@@ -3,8 +3,8 @@ import { PHIcon } from "@ph/ui"
 import { Grid } from "antd"
 import React from "react"
 
-import { useCandidateConfirmation } from "@/pages/schedule-interview/components/MobileCandidateConfirmation/hooks/useCandidateConfirmation"
-import { MobileCandidateConfirmationInfo } from "@/pages/schedule-interview/components/MobileCandidateConfirmation/MobileCandidateConfirmationInfo"
+import { CandidateConfirmationInfo } from "@/pages/schedule-interview/components/CandidateConfirmation/CandidateConfirmationInfo"
+import { useCandidateConfirmation } from "@/pages/schedule-interview/components/CandidateConfirmation/hooks/useCandidateConfirmation"
 import {
   LIInterviewMode,
   LIInterviewModeLabel,
@@ -13,7 +13,7 @@ import { formatDateToLongString, formatDateToTimeString } from "@/utils/dateTime
 
 const { useBreakpoint } = Grid
 
-export const MobileCandidateConfirmation = () => {
+export const CandidateConfirmation = () => {
   const { interviewData } = useCandidateConfirmation()
   const { jobRequisitionName, interviewMode, interviewAddress, timezone, interviewTime, interviewLink } = interviewData
   const interviewDate = formatDateToLongString(new Date(interviewTime.start), timezone)
@@ -43,14 +43,14 @@ export const MobileCandidateConfirmation = () => {
         <div className="border-t border-gray-200"></div>
         <div className="text-lg font-semibold text-black">
           <h2 className="mb-6 text-lg font-semibold text-black">{jobRequisitionName}</h2>
-          <MobileCandidateConfirmationInfo title="Interview Type" description={LIInterviewModeLabel[interviewMode]} />
+          <CandidateConfirmationInfo title="Interview Type" description={LIInterviewModeLabel[interviewMode]} />
           {interviewMode === LIInterviewMode.IN_PERSON && interviewAddress && (
-            <MobileCandidateConfirmationInfo title="Location" description={interviewAddress} />
+            <CandidateConfirmationInfo title="Location" description={interviewAddress} />
           )}
           {interviewMode === LIInterviewMode.ONLINE && (
-            <MobileCandidateConfirmationInfo title="Link" description={interviewLink} />
+            <CandidateConfirmationInfo title="Link" description={interviewLink} />
           )}
-          <MobileCandidateConfirmationInfo title="Timezone" description={timezone} />
+          <CandidateConfirmationInfo title="Timezone" description={timezone} />
         </div>
         <button className="flex h-[49px] w-full items-center justify-center rounded-full bg-black">
           <CalendarOutlined className="mr-2 text-2xl !text-white" />

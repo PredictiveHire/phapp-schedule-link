@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react"
 import React from "react"
 
-import { MobileCandidateConfirmation } from "@/pages/schedule-interview/components/MobileCandidateConfirmation"
-import { useCandidateConfirmation } from "@/pages/schedule-interview/components/MobileCandidateConfirmation/hooks/useCandidateConfirmation"
+import { CandidateConfirmation } from "@/pages/schedule-interview/components/CandidateConfirmation"
+import { useCandidateConfirmation } from "@/pages/schedule-interview/components/CandidateConfirmation/hooks/useCandidateConfirmation"
 import {
   LIInterviewMode,
   LIInterviewModeLabel,
@@ -37,9 +37,9 @@ const mockUseCandidateConfirmation = (
   interviewData,
 })
 
-describe("MobileCandidateConfirmation", () => {
+describe("CandidateConfirmation", () => {
   it("renders the component correctly", () => {
-    render(<MobileCandidateConfirmation />)
+    render(<CandidateConfirmation />)
 
     expect(screen.getByText("Friday, June 14 09:00 AM")).toBeInTheDocument()
     expect(screen.getByText("10:00 AM")).toBeInTheDocument()
@@ -51,7 +51,7 @@ describe("MobileCandidateConfirmation", () => {
   })
 
   it("displays the correct interview mode and location for in-person interview", () => {
-    render(<MobileCandidateConfirmation />)
+    render(<CandidateConfirmation />)
     expect(screen.getByText("In person")).toBeInTheDocument()
     expect(screen.getByText(interviewData.interviewAddress)).toBeInTheDocument()
   })
@@ -66,13 +66,13 @@ describe("MobileCandidateConfirmation", () => {
       },
     })
 
-    render(<MobileCandidateConfirmation />)
+    render(<CandidateConfirmation />)
     expect(screen.getByText("Online")).toBeInTheDocument()
     expect(screen.getByText("https://example.com/interview")).toBeInTheDocument()
   })
 
   it('has an "Add to calendar" button', () => {
-    render(<MobileCandidateConfirmation />)
+    render(<CandidateConfirmation />)
     const button = screen.getByRole("button", { name: /add to calendar/i })
     expect(button).toBeInTheDocument()
     expect(button).toHaveClass("bg-black")

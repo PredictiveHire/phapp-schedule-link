@@ -1,14 +1,14 @@
 import { render, screen } from "@testing-library/react"
 import React from "react"
 
-import { MobileCandidateConfirmationInfo } from "@/pages/schedule-interview/components/MobileCandidateConfirmation/MobileCandidateConfirmationInfo"
+import { CandidateConfirmationInfo } from "@/pages/schedule-interview/components/CandidateConfirmation"
 
-describe("MobileCandidateConfirmationInfo", () => {
+describe("CandidateConfirmationInfo", () => {
   it("should renders title and description correctly", () => {
     const title = "Test Title"
     const description = "Test Description"
 
-    render(<MobileCandidateConfirmationInfo title={title} description={description} />)
+    render(<CandidateConfirmationInfo title={title} description={description} />)
 
     const titleElement = screen.getByText(title)
     const descriptionElement = screen.getByText(description)
