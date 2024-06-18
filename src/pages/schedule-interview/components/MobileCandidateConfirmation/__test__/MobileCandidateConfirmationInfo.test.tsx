@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react"
 import React from "react"
 
-import { MobileCandidateConfirmationInfo } from "../MobileCandidateConfirmationInfo"
+import { MobileCandidateConfirmationInfo } from "@/pages/schedule-interview/components/MobileCandidateConfirmation/MobileCandidateConfirmationInfo"
 
 describe("MobileCandidateConfirmationInfo", () => {
   it("should renders title and description correctly", () => {
@@ -15,7 +15,7 @@ describe("MobileCandidateConfirmationInfo", () => {
 
     expect(titleElement).toBeInTheDocument()
     expect(descriptionElement).toBeInTheDocument()
-    expect(titleElement).toHaveClass("text-tertiary w-[100px] text-sm font-light")
-    expect(descriptionElement).toHaveClass("ml-2 text-sm font-semibold text-black")
+    expect(titleElement).toHaveClass("text-tertiary w-2/5 text-sm font-light lg:w-1/3")
+    expect(descriptionElement).toHaveClass("w-full text-sm font-semibold text-black")
   })
 })

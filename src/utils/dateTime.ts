@@ -1,6 +1,6 @@
 import dayjs from "dayjs"
 
-import { InterviewTimeSlot } from "../pages/schedule-interview/components/MobileCandidateSelectInterviewTime/type"
+import { InterviewTimeSlot } from "@/pages/schedule-interview/components/MobileCandidateSelectInterviewTime/type"
 
 export const getFormattedDate = (date: Date, format: string = "YYYY-MM-DD"): string => dayjs(date).format(format)
 

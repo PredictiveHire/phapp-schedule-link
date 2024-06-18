@@ -10,9 +10,9 @@ export const MobileCandidateConfirmationInfo: React.FC<MobileCandidateConfirmati
   description,
 }) => {
   return (
-    <div className="mb-3 flex items-center">
-      <div className="text-tertiary w-[100px] text-sm font-light">{title}</div>
-      <div className="ml-2 text-sm font-semibold text-black">{description}</div>
+    <div className="mb-3 flex items-start gap-2 last:mb-0 lg:w-full">
+      <div className="text-tertiary w-2/5 text-sm font-light lg:w-1/3">{title}</div>
+      <div className="w-full text-sm font-semibold text-black">{description}</div>
     </div>
   )
 }

@@ -1,11 +1,23 @@
 import { render, screen } from "@testing-library/react"
 import React from "react"
 
-import { LIInterviewMode, LIInterviewModeLabel } from "../../MobileCandidateSelectInterviewTime/constants"
-import { useCandidateConfirmation } from "../hooks/useCandidateConfirmation"
-import { MobileCandidateConfirmation } from "../MobileCandidateConfirmation"
+import { MobileCandidateConfirmation } from "@/pages/schedule-interview/components/MobileCandidateConfirmation"
+import { useCandidateConfirmation } from "@/pages/schedule-interview/components/MobileCandidateConfirmation/hooks/useCandidateConfirmation"
+import {
+  LIInterviewMode,
+  LIInterviewModeLabel,
+} from "@/pages/schedule-interview/components/MobileCandidateSelectInterviewTime/constants"
 
-jest.mock("../../../../../assets/images/candidate-confirmation.svg", () => "mocked-image-path")
+jest.mock("antd", () => {
+  const actual = jest.requireActual<Record<string, unknown>>("antd")
+  return {
+    ...actual,
+    Grid: {
+      useBreakpoint: jest.fn().mockReturnValue({ lg: true }),
+    },
+  }
+})
+jest.mock("../hooks/useCandidateConfirmation")
 
 const interviewData = {
   jobRequisitionName: "Software Engineer",
@@ -18,8 +30,6 @@ const interviewData = {
   interviewAddress: "7 Kent Street",
   interviewLink: "",
 }
-
-jest.mock("../hooks/useCandidateConfirmation")
 
 const mockUseCandidateConfirmation = (
   useCandidateConfirmation as jest.MockedFunction<typeof useCandidateConfirmation>
