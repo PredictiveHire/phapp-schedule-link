@@ -18,8 +18,8 @@ importers:
         specifier: 3.10.4
         version: 3.10.4(@types/react@18.3.3)(graphql-ws@5.16.0(graphql@16.8.1))(graphql@16.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@ph/ui':
-        specifier: 0.0.67
-        version: 0.0.67(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
+        specifier: 0.0.69
+        version: 0.0.69(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
       '@radix-ui/react-accordion':
         specifier: 1.1.2
         version: 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1259,8 +1259,8 @@ packages:
     resolution: {integrity: sha512-YBcMfqNSwn3SujUJvAaySy5tlYbYm6tVt9SKoXu8BaTdKGROiJDgPR3TXpZdAKUfklzm3lRapJEAltiMQtBgZg==}
     engines: {node: '>=10.12.0'}
 
-  '@ph/ui@0.0.67':
-    resolution: {integrity: sha1-jdxSXOMtSJaMk2t4yLZNB/N89Ls=, tarball: https://npm-proxy.fury.io/2kXK4h-tOiVe6tkJFUG9BORUjwL9Ttfe00/predictivehire/~/up/ver_1QjJ1b/ph-ui-v0.0.67.tgz}
+  '@ph/ui@0.0.69':
+    resolution: {integrity: sha1-25DBJkDydXMpStqKGVyoo1K1nDE=, tarball: https://npm-proxy.fury.io/2kXK4h-tOiVe6tkJFUG9BORUjwL9Ttfe00/predictivehire/~/up/ver_1rwitO/ph-ui-v0.0.69.tgz}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -7600,7 +7600,7 @@ snapshots:
       tslib: 2.6.2
       webcrypto-core: 1.7.9
 
-  '@ph/ui@0.0.67(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)':
+  '@ph/ui@0.0.69(@babel/core@7.24.6)(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)':
     dependencies:
       ahooks: 2.10.14(react@18.3.1)
       antd: 4.24.16(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
