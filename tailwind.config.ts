@@ -112,6 +112,7 @@ export default {
         "desktop-job-requisitions-global-search": "20.75rem",
         "ci-score-button": "7.8125rem",
         "invalid-link-container": "68.125rem",
+        "confirmation-container-desktop": "35rem",
       },
       height: {
         "logo-container": "3rem",
