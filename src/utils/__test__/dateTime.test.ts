@@ -1,4 +1,4 @@
-import { InterviewTimeSlot } from "@/pages/schedule-interview/components/MobileCandidateSelectInterviewTime/type"
+import { InterviewTimeSlot } from "@/pages/schedule-interview/type"
 
 import { formatDateToLongString, formatDateToTimeSlot, formatDateToTimeString, getFormattedDate } from "../dateTime"
 

@@ -1,5 +1,5 @@
-import { LIInterviewMode } from "../../MobileCandidateSelectInterviewTime/constants"
-import { InterviewTimeSlot } from "../../MobileCandidateSelectInterviewTime/type"
+import { LIInterviewMode } from "@/pages/schedule-interview/constants"
+import { InterviewTimeSlot } from "@/pages/schedule-interview/type"
 
 interface InterviewData {
   jobRequisitionName: string

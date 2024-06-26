@@ -7,9 +7,10 @@ import { InvalidLinkPage } from "@/pages/InvalidLinkPage"
 import { cn } from "@/utils"
 
 import logoSvg from "../../../../assets/images/ww-logo.svg"
-import { MobileInterviewInfo } from "./components/MobileInterviewInfo"
+import { LIInterviewMode } from "../../constants"
+import { useCalendarHeader } from "../../hooks/useCalendarHeader"
+import { InterviewInfo } from "../InterviewInfo"
 import { MobileInterviewTimeSlotBooking } from "./components/MobileInterviewTimeSlotBooking"
-import { LIInterviewMode } from "./constants"
 import { useInterviewDate } from "./hooks/useInterviewDate"
 import styles from "./styles.module.css"
 
@@ -33,15 +34,16 @@ export const MobileCandidateSelectInterviewTime = () => {
     isLinkInvalid,
   } = useInterviewDate()
 
+  const { handleClickLeftOutline, handleClickRightOutline } = useCalendarHeader()
   const headerRender = ({ value, onChange }: { value: Dayjs; onChange: (date: Dayjs) => void }) => (
     <div className="mb-4 flex items-center justify-between px-5">
       <LeftOutlined
-        onClick={() => onChange(value.clone().subtract(1, "month"))}
+        onClick={() => handleClickLeftOutline(value, onChange)}
         className="text-secondary cursor-pointer text-xl"
       />
       <span className="px-2 text-base font-semibold text-black">{`${value.format("MMMM")} ${value.year()}`}</span>
       <RightOutlined
-        onClick={() => onChange(value.clone().add(1, "month"))}
+        onClick={() => handleClickRightOutline(value, onChange)}
         className="text-secondary cursor-pointer text-xl"
       />
     </div>
@@ -76,7 +78,7 @@ export const MobileCandidateSelectInterviewTime = () => {
         />
       ) : (
         <div className="mx-auto w-full rounded-[20px] bg-white p-5 shadow-card">
-          <MobileInterviewInfo interviewInfo={interviewInfo} />
+          <InterviewInfo interviewInfo={interviewInfo} />
           <Calendar
             fullscreen={false}
             headerRender={headerRender}

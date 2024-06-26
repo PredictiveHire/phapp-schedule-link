@@ -1,24 +1,35 @@
 import { render, screen } from "@testing-library/react"
-import dayjs from "dayjs"
+import { Grid } from "antd"
 import React from "react"
 
 import { ScheduleInterviewPage } from "../ScheduleInterviewPage"
 
+jest.mock("antd", () => ({
+  ...jest.requireActual<Record<string, unknown>>("antd"),
+  Grid: {
+    useBreakpoint: jest.fn(),
+  },
+}))
+
+const mockUseBreakpoint = Grid.useBreakpoint as jest.Mock<Record<string, boolean>>
 describe("ScheduleInterviewPage", () => {
-  it("should renders MobileCandidateSelectInterviewTime component", () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it("should renders DesktopCandidateSelectInterviewTime when isDesktop is true", () => {
+    mockUseBreakpoint.mockReturnValue({ lg: true })
+
     render(<ScheduleInterviewPage />)
 
-    // Check if the mocked MobileCandidateSelectInterviewTime component is rendered
-    const mobileCandidateSelectInterviewTime = screen.getByTestId("mobile-candidate-select-interview-time")
-    expect(mobileCandidateSelectInterviewTime).toBeInTheDocument()
+    expect(screen.getByTestId("desktop-candidate-select-interview-time")).toBeInTheDocument()
+  })
 
-    const nextButton = screen.getByRole("img", { name: /right/i })
-    expect(nextButton).toBeInTheDocument()
+  it("should renders MobileCandidateSelectInterviewTime when isDesktop is false", () => {
+    mockUseBreakpoint.mockReturnValue({ lg: false })
 
-    const prevButton = screen.getByRole("img", { name: /left/i })
-    expect(prevButton).toBeInTheDocument()
+    render(<ScheduleInterviewPage />)
 
-    const header = screen.getByText(dayjs().format("MMMM YYYY"))
-    expect(header).toBeInTheDocument()
+    expect(screen.getByTestId("mobile-candidate-select-interview-time")).toBeInTheDocument()
   })
 })

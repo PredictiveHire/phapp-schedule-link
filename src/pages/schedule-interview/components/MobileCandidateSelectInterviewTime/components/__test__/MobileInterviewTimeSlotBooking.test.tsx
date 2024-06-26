@@ -5,12 +5,12 @@ import React from "react"
 
 import { formatDateToLongString } from "@/utils/dateTime"
 
+import { useTimeSlots } from "../../../../hooks/useTimeSlots"
 import { useInterviewBooking } from "../../hooks/useInterviewBooking"
-import { useTimeSlots } from "../../hooks/useTimeSlots"
 import { InterviewTimeSlotBookingProps, MobileInterviewTimeSlotBooking } from "../MobileInterviewTimeSlotBooking"
 
 jest.mock("../../hooks/useInterviewBooking")
-jest.mock("../../hooks/useTimeSlots")
+jest.mock("../../../../hooks/useTimeSlots")
 jest.mock("@/utils/dateTime")
 
 const mockUserInterviewBookingValue = {
@@ -18,7 +18,7 @@ const mockUserInterviewBookingValue = {
   selectedDateAndTime: { selectedDate: "2024-06-13", selectedTime: "09:00" },
   selectedTime: "09:00",
   handleDateChange: jest.fn(),
-  handleTimeChange: jest.fn(),
+  handleTimeSlotChange: jest.fn(),
   handleBookInterviewNow: jest.fn(),
   isLeftArrowDisabled: false,
   isRightArrowDisabled: false,
@@ -48,7 +48,7 @@ describe("MobileInterviewTimeSlotBooking", () => {
       selectedDateAndTime: { selectedDate: "2024-06-13", selectedTime: "09:00" },
       selectedTime: "09:00",
       handleDateChange: jest.fn(),
-      handleTimeChange: jest.fn(),
+      handleTimeSlotChange: jest.fn(),
       handleBookInterviewNow: jest.fn(),
       isLeftArrowDisabled: false,
       isRightArrowDisabled: false,
@@ -92,15 +92,15 @@ describe("MobileInterviewTimeSlotBooking", () => {
 
   it("should handle time change when a time slot is selected", async () => {
     const user = userEvent.setup()
-    const handleTimeChange = jest.fn()
+    const handleTimeSlotChange = jest.fn()
     mockUseInterviewBooking.mockReturnValue({
       ...mockUserInterviewBookingValue,
-      handleTimeChange,
+      handleTimeSlotChange,
     })
     setup()
 
     await user.click(screen.getByText("10:00"))
-    expect(handleTimeChange).toHaveBeenCalledWith("10:00")
+    expect(handleTimeSlotChange).toHaveBeenCalledWith("10:00")
   })
 
   it("should handle booking interview when 'Book interview now' button is clicked", async () => {

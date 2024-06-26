@@ -10,8 +10,8 @@
 }
 
 
-.interviewTimeSlotBookingWrapper > :global(.buttonBook.css-dev-only-do-not-override-cm12gd.ant-btn),
-.interviewTimeSlotBookingWrapper > :global(.buttonBook.css-dev-only-do-not-override-cm12gd.ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover) {
+.interviewTimeSlotBookingWrapper > :global(.buttonBook.ant-btn),
+.interviewTimeSlotBookingWrapper > :global(.buttonBook.ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover) {
     height: 49px;
     background: var(--colorBgContainerDisabled, rgba(0, 0, 0, 0.07));
     box-shadow: 0px 3px 30px 1px rgba(170, 170, 170, 0.25);
@@ -21,8 +21,8 @@
     padding: 0;
     border: none;
 }
-.interviewTimeSlotBookingWrapper > :global(.buttonBook.css-dev-only-do-not-override-cm12gd.ant-btn.active),
-.interviewTimeSlotBookingWrapper > :global(.buttonBook.active.css-dev-only-do-not-override-cm12gd.ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover)  {
+.interviewTimeSlotBookingWrapper > :global(.buttonBook.ant-btn.active),
+.interviewTimeSlotBookingWrapper > :global(.buttonBook.active.ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover)  {
     background: #000000;
     box-shadow: 0px 3px 30px 1px #AAAAAA33;
     color: #ffffff;

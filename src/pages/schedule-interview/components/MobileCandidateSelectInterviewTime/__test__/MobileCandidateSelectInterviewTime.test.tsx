@@ -10,10 +10,10 @@ describe("MobileCandidateSelectInterviewTime", () => {
     jest.clearAllMocks()
   })
 
-  it("should render MobileInterviewInfo and Calendar", () => {
+  it("should render InterviewInfo and Calendar", () => {
     render(<MobileCandidateSelectInterviewTime />)
 
-    expect(screen.getByTestId("mobile-interview-info")).toBeInTheDocument()
+    expect(screen.getByTestId("interview-info")).toBeInTheDocument()
     expect(screen.getByRole("table")).toBeInTheDocument() // Calendar table
   })
 
@@ -40,7 +40,7 @@ describe("MobileCandidateSelectInterviewTime", () => {
     await user.click(closeButton)
 
     expect(screen.queryByTestId("mobile-interview-time-slot-booking")).not.toBeInTheDocument()
-    expect(screen.getByTestId("mobile-interview-info")).toBeInTheDocument()
+    expect(screen.getByTestId("interview-info")).toBeInTheDocument()
   })
 
   it("should render correct header with month and year", () => {
