@@ -55,48 +55,48 @@ steps:
 
   - wait
 
-  # - block: "Deploy to QA"
-  #   fields:
-  #     - select: "QA Preview Environments"
-  #       key: "deploy-qa-preview-envs"
-  #       hint: "Which QA preview environment should we deploy to? :eye:"
-  #       multiple: true
-  #       default: [ "qa" ]
-  #       options:
-  #         - label: "QA Default"
-  #           value: "qa"
-  #         - label: "QA Env 1"
-  #           value: "qa-env1"
-  #   branches:
-  #     - "develop"
-  #     - "hotfix/*"
+  - block: "Deploy to QA"
+    fields:
+      - select: "QA Preview Environments"
+        key: "deploy-qa-preview-envs"
+        hint: "Which QA preview environment should we deploy to? :eye:"
+        multiple: true
+        default: [ "qa" ]
+        options:
+          - label: "QA Default"
+            value: "qa"
+          - label: "QA Env 1"
+            value: "qa-env1"
+    branches:
+      - "develop"
+      - "hotfix/*"
 
-  # - wait
+  - wait
 
-  # - label: ":rocket: Push artifacts to s3 bucket of QA environment"
-  #   branches:
-  #     - "develop"
-  #     - "hotfix/*"
-  #   command:
-  #     - "./.buildkite/deploy.sh qa"
-  #   plugins:
-  #     - docker#v5.9.0:
-  #         image: "predictivehireadmin/node-awscli:18.16.0"
-  #         # important as we use buildkite-agent meta-data to determine which preview environment to deploy to
-  #         mount-buildkite-agent: true
-  #         environment:
-  #           - VITE_ENVIRONMENT=qa
-  #           - VITE_STAGE=qa
-  #           - VITE_ROLLBAR_TOKEN=03a930563321486781b69f92b1862519
-  #           - VITE_INTERCOM_APP_ID=fblmptt1
-  #           - VITE_HEAP_ID=1575757007
-  #           - VITE_HOTJAR_ID=3694749
-  #           - VITE_LD_CLIENT_ID=654d486b165df3126ac60fb2
-  #           - VITE_GOOGLE_MAP_API_KEY=AIzaSyAhZvYf0R2LqDA8HchRJuw4Okt8oEtP5SA
-  #         volumes:
-  #           - "$HOME/.aws:/root/.aws:ro"
-  #   agents:
-  #     queue: "new-infra-large-instance"
+  - label: ":rocket: Push artifacts to s3 bucket of QA environment"
+    branches:
+      - "develop"
+      - "hotfix/*"
+    command:
+      - "./.buildkite/deploy.sh qa"
+    plugins:
+      - docker#v5.9.0:
+          image: "predictivehireadmin/node-awscli:18.16.0"
+          # important as we use buildkite-agent meta-data to determine which preview environment to deploy to
+          mount-buildkite-agent: true
+          environment:
+            - VITE_ENVIRONMENT=qa
+            - VITE_STAGE=qa
+            - VITE_ROLLBAR_TOKEN=03a930563321486781b69f92b1862519
+            - VITE_INTERCOM_APP_ID=fblmptt1
+            - VITE_HEAP_ID=1575757007
+            - VITE_HOTJAR_ID=3694749
+            - VITE_LD_CLIENT_ID=654d486b165df3126ac60fb2
+            - VITE_GOOGLE_MAP_API_KEY=AIzaSyAhZvYf0R2LqDA8HchRJuw4Okt8oEtP5SA
+          volumes:
+            - "$HOME/.aws:/root/.aws:ro"
+    agents:
+      queue: "new-infra-large-instance"
 
   # - wait
 
