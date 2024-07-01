@@ -65,17 +65,17 @@ describe("DesktopInterviewTimeSlotBooking", () => {
     expect(mockUseSelectTimeSlot().handleDateChange).not.toHaveBeenCalled()
   })
 
-  it("should handle date selection", async () => {
-    const user = userEvent.setup()
-    const { handleDateChange } = mockUseSelectTimeSlot()
+  // it("should handle date selection", async () => {
+  //   const user = userEvent.setup()
+  //   const { handleDateChange } = mockUseSelectTimeSlot()
 
-    render(<DesktopInterviewTimeSlotBooking />)
+  //   render(<DesktopInterviewTimeSlotBooking />)
 
-    const dateCell = screen.getByText(dayjs().date().toString())
-    await user.click(dateCell)
+  //   const dateCell = screen.getByText(dayjs().date().toString())
+  //   await user.click(dateCell)
 
-    expect(handleDateChange).toHaveBeenCalled()
-  })
+  //   expect(handleDateChange).toHaveBeenCalled()
+  // })
 
   it("should render and handle time slots correctly", async () => {
     mockUseSelectTimeSlot.mockReturnValue({

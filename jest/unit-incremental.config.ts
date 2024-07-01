@@ -13,5 +13,5 @@ module.exports = {
   setupFilesAfterEnv: ["<rootDir>/jest/unit.setup.ts"],
   collectCoverage: true,
   coverageDirectory: "./ci/coverage",
-  coveragePathIgnorePatterns: ["/node_modules/", "index.ts"],
+  coveragePathIgnorePatterns: ["/node_modules/", "index.ts", "vite.config.ts"],
 }
