@@ -2,45 +2,60 @@ import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import React from "react"
 
-import { SelectedDateAndTime } from "@/pages/schedule-interview/type"
+import { TimeSlot } from "@/pages/schedule-interview/type"
 
 import { SelectTimeSlotsRadioGroup, SelectTimeSlotsRadioGroupProps } from "../SelectTimeSlotsRadioGroup"
 
 describe("SelectTimeSlotsRadioGroup", () => {
-  const mockHandleTimeSlotChange = jest.fn()
+  const timeSlots: TimeSlot[] = [
+    { timeslotId: "1", slot: "09:00 AM - 10:00 AM" },
+    { timeslotId: "2", slot: "10:00 AM - 11:00 AM" },
+    { timeslotId: "3", slot: "11:00 AM - 12:00 PM" },
+  ]
 
-  const defaultProps: SelectTimeSlotsRadioGroupProps = {
-    timeSlots: ["09:00 AM - 10:00 AM", "10:00 AM - 11:00 AM"],
-    selectedTime: null,
-    selectedDateAndTime: {
-      selectedDate: "2024-06-23",
-      selectedTime: "09:00 AM - 10:00 AM",
-    } as SelectedDateAndTime,
-    handleTimeSlotChange: mockHandleTimeSlotChange,
-    currentDate: "2024-06-23",
-  }
+  const handleTimeSlotChange = jest.fn()
 
-  const renderComponent = (props = defaultProps) => {
+  const setup = (selectedTimeSlotId: string | null) => {
+    const props: SelectTimeSlotsRadioGroupProps = {
+      timeSlots,
+      selectedTimeSlotId,
+      handleTimeSlotChange,
+    }
+
     return render(<SelectTimeSlotsRadioGroup {...props} />)
   }
 
-  it("renders all time slots", () => {
-    renderComponent()
-    defaultProps.timeSlots.forEach((slot) => {
-      expect(screen.getByText(slot)).toBeInTheDocument()
+  it("should render all time slots", () => {
+    setup(null)
+    timeSlots.forEach((timeSlot) => {
+      expect(screen.getByText(timeSlot.slot)).toBeInTheDocument()
     })
   })
 
-  it("displays CheckCircleFilled icon for the selected time slot", () => {
-    renderComponent()
-    expect(screen.getByText("09:00 AM - 10:00 AM").querySelector(".checkCircleFilled")).toBeInTheDocument()
+  it("should render the selected time slot with a check icon", () => {
+    setup("2")
+    expect(screen.getByText("10:00 AM - 11:00 AM")).toBeInTheDocument()
+    expect(screen.getByText("10:00 AM - 11:00 AM").closest("label")).toContainElement(screen.getByRole("img"))
   })
 
-  it("calls handleTimeSlotChange when a time slot is selected", async () => {
-    renderComponent()
-    const timeSlotButton = screen.getByText("09:00 AM - 10:00 AM")
+  it("should call handleTimeSlotChange when a time slot is selected", async () => {
+    setup(null)
+    const user = userEvent.setup()
+    await user.click(screen.getByText("11:00 AM - 12:00 PM"))
+    expect(handleTimeSlotChange).toHaveBeenCalledWith("3")
+  })
 
-    await userEvent.click(timeSlotButton)
-    expect(mockHandleTimeSlotChange).toHaveBeenCalledWith("09:00 AM - 10:00 AM")
+  it("should update the selected time slot when props change", () => {
+    const { rerender } = setup("1")
+    expect(screen.getByText("09:00 AM - 10:00 AM").closest("label")).toContainElement(screen.getByRole("img"))
+
+    rerender(
+      <SelectTimeSlotsRadioGroup
+        timeSlots={timeSlots}
+        selectedTimeSlotId="3"
+        handleTimeSlotChange={handleTimeSlotChange}
+      />
+    )
+    expect(screen.getByText("11:00 AM - 12:00 PM").closest("label")).toContainElement(screen.getByRole("img"))
   })
 })

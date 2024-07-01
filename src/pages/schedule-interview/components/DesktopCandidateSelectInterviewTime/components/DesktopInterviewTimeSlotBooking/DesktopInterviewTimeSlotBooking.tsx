@@ -2,30 +2,26 @@ import { LeftOutlined, RightOutlined } from "@ant-design/icons"
 import { Button, Calendar } from "antd"
 import type { Dayjs } from "dayjs"
 import React from "react"
+import { useParams } from "react-router-dom"
 
+import { SelectTimeSlotsRadioGroup } from "@/pages/schedule-interview/components/SelectTimeSlotsRadioGroup/SelectTimeSlotsRadioGroup"
+import { useBookInterviewNow } from "@/pages/schedule-interview/hooks/useBookInterviewNow"
 import { useCalendarHeader } from "@/pages/schedule-interview/hooks/useCalendarHeader"
+import { useFormatTimeSlots } from "@/pages/schedule-interview/hooks/useFormatTimeSlots"
+import { useInterviewDate } from "@/pages/schedule-interview/hooks/useInterviewDate"
+import { useSelectTimeSlot } from "@/pages/schedule-interview/hooks/useSelectTimeSlot"
 import { cn } from "@/utils"
 import { formatDateToLongString, formatDayjs } from "@/utils/dateTime"
 
-import { useTimeSlots } from "../../../../hooks/useTimeSlots"
-import { SelectTimeSlotsRadioGroup } from "../../../SelectTimeSlotsRadioGroup/SelectTimeSlotsRadioGroup"
-import { useSelectTimeSlot } from "../../hooks/useSelectTimeSlot"
 import styles from "./styles.module.css"
 
 export const DesktopInterviewTimeSlotBooking: React.FC = () => {
-  const {
-    initialInterviewDate,
-    handleTimeSlotChange,
-    selectedTime,
-    selectedDateAndTime,
-    interviewDate,
-    isInterviewDate,
-    disabledDate,
-    interviewDates,
-    handleDateChange,
-    handleBookInterviewNow,
-  } = useSelectTimeSlot()
-  const { formatTimeSlots } = useTimeSlots()
+  const { selectedTimeSlotId, handleTimeSlotChange } = useSelectTimeSlot()
+  const { initialInterviewDate, interviewDate, isInterviewDate, disabledDate, handleDateChange, interviewDates } =
+    useInterviewDate()
+  const { handleBookInterviewNow, isBookCandidateInterviewLoading } = useBookInterviewNow()
+
+  const { formatTimeSlots } = useFormatTimeSlots()
   const currentDate = formatDayjs(interviewDate)
   const timeSlots = formatTimeSlots(interviewDates, currentDate)
   const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -34,6 +30,14 @@ export const DesktopInterviewTimeSlotBooking: React.FC = () => {
     formatDayjs(initialInterviewDate) === formatDayjs(value) && currentDate === formatDayjs(value)
 
   const { handleClickLeftOutline, handleClickRightOutline } = useCalendarHeader()
+  const { shortcode = "" } = useParams()
+  const handleClickBookInterviewNow = () => {
+    void handleBookInterviewNow({
+      timeslotId: selectedTimeSlotId || "",
+      shortcode: shortcode,
+      candidateTimezone: userTimezone,
+    })
+  }
   const headerRender = ({ value, onChange }: { value: Dayjs; onChange: (date: Dayjs) => void }) => (
     <div className="mb-4 flex items-center justify-between px-5">
       <LeftOutlined
@@ -49,15 +53,16 @@ export const DesktopInterviewTimeSlotBooking: React.FC = () => {
   )
 
   const fullCellRender = (value: Dayjs) => (
-    <div
-      className={cn([
-        "ant-picker-cell-inner ant-picker-calendar-date rounded-full text-center",
-        isInterviewDate(value) ? "text-secondary bg-[rgba(0,0,0,0.04)] text-base" : "text-sm text-black/50",
-        isInitialAndCurrentDate(value) && "bg-sapia-pink",
-      ])}
-      onClick={() => handleDateChange(value)}
-    >
-      <div className="rounded-full">{value.date()}</div>
+    <div className="flex h-full w-full items-center justify-center" onClick={() => handleDateChange(value)}>
+      <div
+        className={cn([
+          "ant-picker-cell-inner ant-picker-calendar-date rounded-full text-center",
+          isInterviewDate(value) ? "text-secondary bg-[rgba(0,0,0,0.04)] text-base" : "text-sm text-black/50",
+          isInitialAndCurrentDate(value) && "bg-sapia-pink",
+        ])}
+      >
+        <div className="rounded-full">{value.date()}</div>
+      </div>
     </div>
   )
 
@@ -83,22 +88,17 @@ export const DesktopInterviewTimeSlotBooking: React.FC = () => {
           </div>
           <div className="h-[350px] overflow-y-auto">
             <SelectTimeSlotsRadioGroup
-              timeSlots={timeSlots}
-              selectedTime={selectedTime}
-              selectedDateAndTime={selectedDateAndTime}
+              timeSlots={[...timeSlots]}
+              selectedTimeSlotId={selectedTimeSlotId}
               handleTimeSlotChange={handleTimeSlotChange}
-              currentDate={currentDate}
             />
           </div>
         </section>
       </section>
       <Button
-        className={cn([
-          "mt-4 w-full text-base font-normal",
-          styles.buttonBook,
-          selectedDateAndTime.selectedTime ? "active" : "",
-        ])}
-        onClick={handleBookInterviewNow}
+        className={cn(["mt-4 w-full text-base font-normal", styles.buttonBook, selectedTimeSlotId ? "active" : ""])}
+        onClick={handleClickBookInterviewNow}
+        loading={isBookCandidateInterviewLoading}
       >
         Book interview now
       </Button>
