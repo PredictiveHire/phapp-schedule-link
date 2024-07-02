@@ -7,28 +7,32 @@ import path from "path"
 import { defineConfig } from "vite"
 import tsconfigPaths from "vite-tsconfig-paths"
 
+console.log("NODE_ENV", process.env.NODE_ENV)
 // https://vitejs.dev/config/
 export default defineConfig({
   build: {
     outDir: "build",
   },
   plugins: [react(), tsconfigPaths()],
-  server: {
-    open: true,
-    host: "schedule.local.sapia.ai",
-    port: 2443,
-    strictPort: true,
-    https: {
-      key: fs.readFileSync(path.resolve(__dirname, "./dev-certs/schedule.local.sapia.ai.key")),
-      cert: fs.readFileSync(path.resolve(__dirname, "./dev-certs/schedule.local.sapia.ai.crt")),
-    },
-    proxy: {
-      "^/api/ap-southeast-2/.*": {
-        target: "http://localhost:8342/api/ap-southeast-2", // or whichever port it's listening on
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api\/ap-southeast-2/, ""),
-      },
-    },
-  },
+  server:
+    process.env.NODE_ENV === "development"
+      ? {
+          open: true,
+          host: "schedule.local.sapia.ai",
+          port: 2443,
+          strictPort: true,
+          https: {
+            key: fs.readFileSync(path.resolve(__dirname, "./dev-certs/schedule.local.sapia.ai.key")),
+            cert: fs.readFileSync(path.resolve(__dirname, "./dev-certs/schedule.local.sapia.ai.crt")),
+          },
+          proxy: {
+            "^/api/ap-southeast-2/.*": {
+              target: "http://localhost:8342/api/ap-southeast-2", // or whichever port it's listening on
+              changeOrigin: true,
+              secure: false,
+              rewrite: (path) => path.replace(/^\/api\/ap-southeast-2/, ""),
+            },
+          },
+        }
+      : {},
 })
