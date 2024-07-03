@@ -71,6 +71,7 @@ steps:
       - "develop"
       - "bugfix/*"
       - "hotfix/*"
+      - "feature/*"
 
   - wait
 
@@ -79,6 +80,7 @@ steps:
       - "develop"
       - "bugfix/*"
       - "hotfix/*"
+      - "feature/*"
     command:
       - "pnpm install --frozen-lockfile"
       - "pnpm build"

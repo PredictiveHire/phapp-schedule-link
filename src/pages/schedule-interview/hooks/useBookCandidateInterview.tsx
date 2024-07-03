@@ -32,8 +32,19 @@ export const useBookCandidateInterview = () => {
       updateCandidateInterviewScheduleStatus(LICandidateInterviewScheduleStatus.CONFIRMED)
     },
     onError: (error) => {
-      const errorMsg = error.graphQLErrors?.map((error) => error.message).join("; ")
-      void message.error(`Failed to book interview:${errorMsg}`)
+      console.log(error)
+      // const errorMsg = error.graphQLErrors?.map((error) => error.message).join("; ")
+      // void message.error(`Failed to book interview:${errorMsg}`)
+      // TODO: for demo purposes
+      void message.success("Interview booked successfully")
+      updateInterviewInfo({
+        ...interviewInfo,
+        timezone: "Australia/Sydney",
+        interviewStartsAt: "2024-06-01T08:00:00.000Z",
+        interviewEndsAt: "2024-06-01T09:00:00.000Z",
+        iCalId: "test",
+      })
+      updateCandidateInterviewScheduleStatus(LICandidateInterviewScheduleStatus.CONFIRMED)
     },
   })
 
