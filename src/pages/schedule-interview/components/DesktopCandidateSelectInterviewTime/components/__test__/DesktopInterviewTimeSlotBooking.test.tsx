@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event"
 import dayjs from "dayjs"
 import React from "react"
 
+import { DATE_FORMAT } from "@/pages/schedule-interview/constants"
 import { useBookInterviewNow } from "@/pages/schedule-interview/hooks/useBookInterviewNow"
 import { useFormatTimeSlots } from "@/pages/schedule-interview/hooks/useFormatTimeSlots"
 import { useInterviewDate } from "@/pages/schedule-interview/hooks/useInterviewDate"
@@ -37,7 +38,11 @@ const mockUseInterviewDateValue = {
   interviewDates: [
     { timeslotId: "1", start: "2024-06-13T09:00:00Z", end: "2024-06-13T10:00:00Z" },
     { timeslotId: "2", start: "2024-06-14T10:00:00Z", end: "2024-06-14T11:00:00Z" },
-  ],
+  ].map((date) => ({
+    ...date,
+    start: dayjs(date.start).month(dayjs().month()).format(),
+    end: dayjs(date.end).month(dayjs().month()).format(),
+  })),
   setInterviewDate: jest.fn(),
 }
 
@@ -99,17 +104,21 @@ describe("DesktopInterviewTimeSlotBooking", () => {
     expect(mockUseInterviewDate().handleDateChange).not.toHaveBeenCalled()
   })
 
-  // it("should handle date selection", async () => {
-  //   const user = userEvent.setup()
-  //   const { handleDateChange } = mockUseSelectTimeSlot()
+  it("should handle date selection", async () => {
+    const user = userEvent.setup()
+    const handleDateChange = jest.fn()
+    mockUseInterviewDate.mockReturnValue({
+      ...mockUseInterviewDateValue,
+      handleDateChange,
+    })
 
-  //   render(<DesktopInterviewTimeSlotBooking />)
+    render(<DesktopInterviewTimeSlotBooking />)
+    const dateTestId = dayjs().format(DATE_FORMAT)
+    const dateCell = screen.getByTestId(dateTestId)
+    await user.click(dateCell)
 
-  //   const dateCell = screen.getByText(dayjs().date().toString())
-  //   await user.click(dateCell)
-
-  //   expect(handleDateChange).toHaveBeenCalled()
-  // })
+    expect(handleDateChange).toHaveBeenCalled()
+  })
 
   it("should render and handle time slots correctly", async () => {
     const user = userEvent.setup()
