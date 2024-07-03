@@ -4,18 +4,26 @@ import { Grid } from "antd"
 import React from "react"
 
 import { CandidateConfirmationInfo } from "@/pages/schedule-interview/components/CandidateConfirmation/CandidateConfirmationInfo"
-import { useCandidateConfirmation } from "@/pages/schedule-interview/components/CandidateConfirmation/hooks/useCandidateConfirmation"
 import { LIInterviewMode, LIInterviewModeLabel } from "@/pages/schedule-interview/constants"
+import { useScheduleInterview } from "@/pages/schedule-interview/hooks/useScheduleInterview"
 import { formatDateToLongString, formatDateToTimeString } from "@/utils/dateTime"
 
 const { useBreakpoint } = Grid
 
 export const CandidateConfirmation = () => {
-  const { interviewData } = useCandidateConfirmation()
-  const { jobRequisitionName, interviewMode, interviewAddress, timezone, interviewTime, interviewLink } = interviewData
-  const interviewDate = formatDateToLongString(new Date(interviewTime.start), timezone)
-  const interviewStartDateTime = formatDateToTimeString(interviewTime.start, timezone)
-  const interviewEndDateTime = formatDateToTimeString(interviewTime.end, timezone)
+  const { interviewInfo } = useScheduleInterview()
+  const {
+    jobRequisitionName,
+    interviewMode,
+    interviewAddress = "",
+    timezone = "",
+    interviewStartsAt = "",
+    interviewEndsAt = "",
+    interviewLink = "",
+  } = interviewInfo
+  const interviewDate = formatDateToLongString(new Date(interviewStartsAt), timezone)
+  const interviewStartDateTime = formatDateToTimeString(interviewStartsAt, timezone)
+  const interviewEndDateTime = formatDateToTimeString(interviewEndsAt, timezone)
 
   const breakpoint = useBreakpoint()
   let iconSize = 140 // icon size for mobile
@@ -24,14 +32,17 @@ export const CandidateConfirmation = () => {
   }
 
   return (
-    <div className="h-screen overflow-y-auto bg-gray-100 p-5 lg:flex lg:items-center lg:justify-center">
+    <div
+      className="h-screen overflow-y-auto bg-gray-100 p-5 lg:flex lg:items-center lg:justify-center"
+      data-testid="candidate-confirmation"
+    >
       <article className="mx-auto flex h-auto w-full max-w-sm flex-col gap-6 rounded-[20px] bg-white p-5 shadow-card *:w-full lg:w-confirmation-container-desktop lg:max-w-none lg:p-10">
         <PHIcon size={iconSize} name="interviewConfirmation" />
         <header className="text-center">
           <h2 className="mb-0 text-lg font-semibold text-black">We look forward to seeing you on </h2>
           <h2 className="mb-0 text-lg font-semibold text-black">
-            <time dateTime={interviewTime.start}>{`${interviewDate} ${interviewStartDateTime}`}</time>-{" "}
-            <time dateTime={interviewTime.end}>{interviewEndDateTime}</time>!
+            <time dateTime={interviewStartsAt}>{`${interviewDate} ${interviewStartDateTime}`}</time>-{" "}
+            <time dateTime={interviewEndsAt}>{interviewEndDateTime}</time>!
           </h2>
         </header>
         <p className="text-secondary mb-0 text-center text-base font-light">

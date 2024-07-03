@@ -24,7 +24,7 @@ export default defineConfig({
     },
     proxy: {
       "^/api/ap-southeast-2/.*": {
-        target: "http://localhost:8342/api/ap-southeast-2", // or whichever port it's listening on
+        target: "http://localhost:8194/api/ap-southeast-2", // or whichever port it's listening on
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api\/ap-southeast-2/, ""),

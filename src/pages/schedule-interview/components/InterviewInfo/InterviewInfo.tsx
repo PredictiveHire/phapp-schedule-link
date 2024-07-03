@@ -7,8 +7,8 @@ interface InterviewInfoProps {
     logo: string
     jobRequisitionName: string
     interviewMode: LIInterviewMode
-    interviewAddress?: string
-    interviewLink?: string
+    interviewAddress?: string | null
+    interviewLink?: string | null
   }
 }
 export const InterviewInfo = ({

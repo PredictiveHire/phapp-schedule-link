@@ -40,6 +40,7 @@ describe("utils => dateTime", () => {
 
   describe("formatDateToTimeSlot", () => {
     const slot = {
+      timeslotId: "1",
       start: "2024-06-14T08:00:00Z",
       end: "2024-06-14T09:00:00Z",
     }
@@ -51,6 +52,7 @@ describe("utils => dateTime", () => {
 
     it("should handle invalid date strings gracefully", () => {
       const slot: InterviewTimeSlot = {
+        timeslotId: "1",
         start: "invalid date",
         end: "invalid date",
       }
