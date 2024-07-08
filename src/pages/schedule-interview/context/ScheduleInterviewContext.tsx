@@ -14,6 +14,7 @@ export const ScheduleInterviewContext = createContext<ScheduleInterviewContextTy
 export const ScheduleInterviewProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // TODO: get candidate interview schedule info from backend
   const initialInterviewInfo = {
+    iCalId: "bed76d65-5360-43e7-b971-88462020dda2",
     jobRequisitionName: "job requisition name",
     interviewMode: LIInterviewMode.IN_PERSON,
     interviewAddress: "216 Lower Heidelberg Rd, Ivanhoe East VIC 3079",

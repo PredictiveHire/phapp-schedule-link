@@ -3,10 +3,12 @@ import { PHIcon } from "@ph/ui"
 import { Grid } from "antd"
 import React from "react"
 
+import { getICalContent } from "@/api/getICalFile"
 import { CandidateConfirmationInfo } from "@/pages/schedule-interview/components/CandidateConfirmation/CandidateConfirmationInfo"
 import { LIInterviewMode, LIInterviewModeLabel } from "@/pages/schedule-interview/constants"
 import { useScheduleInterview } from "@/pages/schedule-interview/hooks/useScheduleInterview"
 import { formatDateToLongString, formatDateToTimeString } from "@/utils/dateTime"
+import { downloadICalFile } from "@/utils/downloadICalFile"
 
 const { useBreakpoint } = Grid
 
@@ -20,6 +22,7 @@ export const CandidateConfirmation = () => {
     interviewStartsAt = "",
     interviewEndsAt = "",
     interviewLink = "",
+    iCalId,
   } = interviewInfo
   const interviewDate = formatDateToLongString(new Date(interviewStartsAt), timezone)
   const interviewStartDateTime = formatDateToTimeString(interviewStartsAt, timezone)
@@ -29,6 +32,17 @@ export const CandidateConfirmation = () => {
   let iconSize = 140 // icon size for mobile
   if (breakpoint.lg) {
     iconSize = 191 // icon size for desktop
+  }
+
+  const addToCalendar = async (): Promise<void> => {
+    if (!iCalId) {
+      return
+    }
+    const res = await getICalContent(iCalId)
+    const iCalContent = res.data as string
+    if (iCalContent) {
+      downloadICalFile(iCalContent)
+    }
   }
 
   return (
@@ -60,7 +74,12 @@ export const CandidateConfirmation = () => {
           )}
           <CandidateConfirmationInfo title="Timezone" description={timezone} />
         </div>
-        <button className="flex h-[49px] w-full items-center justify-center rounded-full bg-black">
+        <button
+          className="flex h-[49px] w-full items-center justify-center rounded-full bg-black"
+          onClick={() => {
+            void addToCalendar()
+          }}
+        >
           <CalendarOutlined className="mr-2 text-2xl !text-white" />
           <span className="text-white">Add to calendar</span>
         </button>

@@ -9,6 +9,8 @@ import {
   mockScheduleInterviewContext,
 } from "@/pages/schedule-interview/mock/mockScheduleInterviewContext"
 
+jest.mock("@/constants", () => ({}))
+
 jest.mock("antd", () => {
   const actual = jest.requireActual<Record<string, unknown>>("antd")
   return {

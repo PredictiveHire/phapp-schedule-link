@@ -10,6 +10,8 @@ import { mockScheduleInterviewContext } from "@/pages/schedule-interview/mock/mo
 
 import { ScheduleInterview } from "../ScheduleInterview"
 
+jest.mock("@/constants", () => ({}))
+
 jest.mock("antd", () => ({
   ...jest.requireActual<Record<string, unknown>>("antd"),
   Grid: {
