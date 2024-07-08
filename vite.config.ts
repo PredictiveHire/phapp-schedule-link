@@ -13,22 +13,25 @@ export default defineConfig({
     outDir: "build",
   },
   plugins: [react(), tsconfigPaths()],
-  server: {
-    open: true,
-    host: "schedule.local.sapia.ai",
-    port: 2443,
-    strictPort: true,
-    https: {
-      key: fs.readFileSync(path.resolve(__dirname, "./dev-certs/schedule.local.sapia.ai.key")),
-      cert: fs.readFileSync(path.resolve(__dirname, "./dev-certs/schedule.local.sapia.ai.crt")),
-    },
-    proxy: {
-      "^/api/ap-southeast-2/.*": {
-        target: "http://localhost:8194/api/ap-southeast-2", // or whichever port it's listening on
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api\/ap-southeast-2/, ""),
-      },
-    },
-  },
+  server:
+    process.env.NODE_ENV === "development"
+      ? {
+          open: true,
+          host: "schedule.local.sapia.ai",
+          port: 2443,
+          strictPort: true,
+          https: {
+            key: fs.readFileSync(path.resolve(__dirname, "./dev-certs/schedule.local.sapia.ai.key")),
+            cert: fs.readFileSync(path.resolve(__dirname, "./dev-certs/schedule.local.sapia.ai.crt")),
+          },
+          proxy: {
+            "^/api/ap-southeast-2/.*": {
+              target: "http://localhost:8342/api/ap-southeast-2", // or whichever port it's listening on
+              changeOrigin: true,
+              secure: false,
+              rewrite: (path) => path.replace(/^\/api\/ap-southeast-2/, ""),
+            },
+          },
+        }
+      : {},
 })

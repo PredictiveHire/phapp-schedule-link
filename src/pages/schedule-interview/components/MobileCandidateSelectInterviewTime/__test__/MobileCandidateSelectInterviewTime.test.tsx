@@ -45,7 +45,7 @@ describe("MobileCandidateSelectInterviewTime", () => {
   it("should show MobileInterviewTimeSlotBooking when a valid date is clicked", async () => {
     renderComponent()
 
-    const dateCell = screen.getAllByText("1")[0] // Assuming the first date cell with "1" is valid
+    const dateCell = screen.getAllByText("1")[0]
     const user = userEvent.setup()
     await user.click(dateCell)
 
@@ -55,7 +55,7 @@ describe("MobileCandidateSelectInterviewTime", () => {
   it("should close MobileInterviewTimeSlotBooking when close button is clicked", async () => {
     renderComponent()
 
-    const dateCell = screen.getAllByText("1")[0] // Assuming the first date cell with "1" is valid
+    const dateCell = screen.getAllByText("1")[0]
     const user = userEvent.setup()
     await user.click(dateCell)
 

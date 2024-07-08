@@ -5,6 +5,7 @@ import React from "react"
 import { useParams } from "react-router-dom"
 
 import { SelectTimeSlotsRadioGroup } from "@/pages/schedule-interview/components/SelectTimeSlotsRadioGroup/SelectTimeSlotsRadioGroup"
+import { DATE_FORMAT } from "@/pages/schedule-interview/constants"
 import { useBookInterviewNow } from "@/pages/schedule-interview/hooks/useBookInterviewNow"
 import { useCalendarHeader } from "@/pages/schedule-interview/hooks/useCalendarHeader"
 import { useFormatTimeSlots } from "@/pages/schedule-interview/hooks/useFormatTimeSlots"
@@ -53,7 +54,11 @@ export const DesktopInterviewTimeSlotBooking: React.FC = () => {
   )
 
   const fullCellRender = (value: Dayjs) => (
-    <div className="flex h-full w-full items-center justify-center" onClick={() => handleDateChange(value)}>
+    <div
+      className="flex h-full w-full items-center justify-center"
+      data-testid={`${value.format(DATE_FORMAT)}`}
+      onClick={() => handleDateChange(value)}
+    >
       <div
         className={cn([
           "ant-picker-cell-inner ant-picker-calendar-date rounded-full text-center",
