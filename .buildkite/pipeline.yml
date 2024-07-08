@@ -65,8 +65,6 @@ steps:
         options:
           - label: "QA Default"
             value: "qa"
-          - label: "QA Env 1"
-            value: "qa-env1"
     branches:
       - "develop"
       - "bugfix/*"
@@ -89,7 +87,7 @@ steps:
             environment:
               - VITE_ENVIRONMENT=qa
               - VITE_STAGE=qa
-              - VITE_ROLLBAR_TOKEN=03a930563321486781b69f92b1862519
+              - VITE_ROLLBAR_TOKEN=7e923aad949942378012cc25dada7514
             volumes:
               - "$HOME/.aws:/root/.aws:ro"
     agents:
