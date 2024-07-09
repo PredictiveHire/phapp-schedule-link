@@ -8,6 +8,7 @@ import { useInterviewDate } from "@/pages/schedule-interview/hooks/useInterviewD
 import { useScheduleInterview } from "@/pages/schedule-interview/hooks/useScheduleInterview"
 import { cn } from "@/utils"
 
+import { LIInterviewMode } from "../../constants"
 import { InterviewInfo } from "../InterviewInfo"
 import { MobileInterviewTimeSlotBooking } from "./components/MobileInterviewTimeSlotBooking"
 import styles from "./styles.module.css"
@@ -16,6 +17,12 @@ export const MobileCandidateSelectInterviewTime = () => {
   const { interviewInfo, logo } = useScheduleInterview()
   const { interviewDate, isInterviewDate, disabledDate, handleDateChange, interviewDates } = useInterviewDate()
   const [showTimeSlotBooking, setShowTimeSlotBooking] = useState(false)
+  const {
+    jobRequisitionName = "",
+    interviewMode = LIInterviewMode.IN_PERSON,
+    interviewAddress = "",
+    interviewLink = "",
+  } = interviewInfo ?? {}
 
   const { handleClickLeftOutline, handleClickRightOutline } = useCalendarHeader()
   const handleClickDate = (value: Dayjs) => {
@@ -63,7 +70,7 @@ export const MobileCandidateSelectInterviewTime = () => {
         />
       ) : (
         <div className="mx-auto w-full rounded-[20px] bg-white p-5 shadow-card">
-          <InterviewInfo interviewInfo={{ ...interviewInfo, logo }} />
+          <InterviewInfo interviewInfo={{ jobRequisitionName, interviewMode, interviewAddress, interviewLink, logo }} />
           <Calendar
             fullscreen={false}
             headerRender={headerRender}

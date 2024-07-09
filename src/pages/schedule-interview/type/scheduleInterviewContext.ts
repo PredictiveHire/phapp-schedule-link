@@ -1,3 +1,5 @@
+import { ApolloError } from "@apollo/client"
+
 import { LICandidateInterviewScheduleStatus, LIInterviewMode } from "../constants/interviewInfo"
 import { InterviewTimeSlot } from "./interviewTimeSlot"
 
@@ -11,11 +13,14 @@ export interface CandidateInterviewScheduleInfo {
   timezone?: string
   iCalId?: string
 }
+
 export type ScheduleInterviewContextType = {
   candidateInterviewScheduleStatus: LICandidateInterviewScheduleStatus
   logo: string
   interviewDates: InterviewTimeSlot[]
-  interviewInfo: CandidateInterviewScheduleInfo
+  interviewInfo: CandidateInterviewScheduleInfo | null
   updateInterviewInfo: (info: CandidateInterviewScheduleInfo) => void
   updateCandidateInterviewScheduleStatus: (status: LICandidateInterviewScheduleStatus) => void
+  isLoadingCandidateScheduleLinkInfo: boolean
+  getCandidateScheduleLinkInfoError: ApolloError | undefined
 }

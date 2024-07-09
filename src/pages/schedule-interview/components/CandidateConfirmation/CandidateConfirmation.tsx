@@ -15,15 +15,15 @@ const { useBreakpoint } = Grid
 export const CandidateConfirmation = () => {
   const { interviewInfo } = useScheduleInterview()
   const {
-    jobRequisitionName,
-    interviewMode,
+    jobRequisitionName = "",
+    interviewMode = LIInterviewMode.IN_PERSON,
     interviewAddress = "",
     timezone = "",
     interviewStartsAt = "",
     interviewEndsAt = "",
     interviewLink = "",
     iCalId,
-  } = interviewInfo
+  } = interviewInfo ?? {}
   const interviewDate = formatDateToLongString(new Date(interviewStartsAt), timezone)
   const interviewStartDateTime = formatDateToTimeString(interviewStartsAt, timezone)
   const interviewEndDateTime = formatDateToTimeString(interviewEndsAt, timezone)

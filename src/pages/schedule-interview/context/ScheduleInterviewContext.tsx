@@ -1,45 +1,83 @@
 import type { ReactNode } from "react"
-import React, { createContext, useState } from "react"
+import React, { createContext, useEffect, useState } from "react"
 
 import logoSvg from "@/assets/images/ww-logo.svg"
+import { ScheduleLinkLoading } from "@/components/ScheduleLinkLoading"
 import { LICandidateInterviewScheduleStatus, LIInterviewMode } from "@/pages/schedule-interview/constants"
-import { interviewDates } from "@/pages/schedule-interview/mock/mockInterviewDates"
 import {
   CandidateInterviewScheduleInfo,
   ScheduleInterviewContextType,
 } from "@/pages/schedule-interview/type/scheduleInterviewContext"
 
+import { useGetCandidateScheduleLinkInfoByShortcode } from "../hooks/useGetCandidateScheduleLinkInfoByShortcode"
+import { InterviewTimeSlot } from "../type"
+import { LiCandidateScheduleLinkInfo } from "../type/getCandidateScheduleLinkByShortcode"
+
 export const ScheduleInterviewContext = createContext<ScheduleInterviewContextType>({} as ScheduleInterviewContextType)
 
 export const ScheduleInterviewProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // TODO: get candidate interview schedule info from backend
-  const initialInterviewInfo = {
-    iCalId: "bed76d65-5360-43e7-b971-88462020dda2",
-    jobRequisitionName: "job requisition name",
-    interviewMode: LIInterviewMode.IN_PERSON,
-    interviewAddress: "216 Lower Heidelberg Rd, Ivanhoe East VIC 3079",
-  }
-  const [interviewInfo, setInterviewInfo] = useState(initialInterviewInfo as CandidateInterviewScheduleInfo)
-
+  const [interviewInfo, setInterviewInfo] = useState<CandidateInterviewScheduleInfo | null>(null)
   const [candidateInterviewScheduleStatus, setCandidateInterviewScheduleStatus] = useState(
     LICandidateInterviewScheduleStatus.PENDING
   )
-  const updateInterviewInfo = (info: CandidateInterviewScheduleInfo) => {
-    setInterviewInfo(info)
-  }
-  const updateCandidateInterviewScheduleStatus = (status: LICandidateInterviewScheduleStatus) => {
-    setCandidateInterviewScheduleStatus(status)
+  const [interviewDates, setInterviewDates] = useState<InterviewTimeSlot[]>([])
+  const [isDataUpdated, setIsDataUpdated] = useState(false)
+
+  const { candidateScheduleLinkInfo, isLoadingCandidateScheduleLinkInfo, getCandidateScheduleLinkInfoError } =
+    useGetCandidateScheduleLinkInfoByShortcode()
+
+  useEffect(() => {
+    if (!isLoadingCandidateScheduleLinkInfo) {
+      if (!getCandidateScheduleLinkInfoError && candidateScheduleLinkInfo) {
+        const {
+          jobRequisitionName,
+          candidateTimezone,
+          candidateScheduleStatus,
+          timeslots,
+          interviewSchedule,
+          interviewEvent,
+        } = candidateScheduleLinkInfo as LiCandidateScheduleLinkInfo
+        const { interviewMode, interviewLink, interviewAddress } = interviewSchedule
+
+        const formattedInterviewDates = timeslots.map((timeslot) => ({
+          start: timeslot.start,
+          end: timeslot.end,
+          timeslotId: timeslot._id,
+        }))
+        setInterviewDates(formattedInterviewDates)
+
+        setInterviewInfo({
+          jobRequisitionName: jobRequisitionName ?? "",
+          timezone: candidateTimezone,
+          interviewMode: interviewMode ?? LIInterviewMode.IN_PERSON,
+          interviewLink: interviewLink ?? "",
+          interviewAddress: interviewAddress ?? "",
+          interviewStartsAt: interviewEvent?.interviewStartsAt ?? "",
+          interviewEndsAt: interviewEvent?.interviewEndsAt ?? "",
+          iCalId: interviewEvent?.iCalId ?? "",
+        })
+
+        setCandidateInterviewScheduleStatus(candidateScheduleStatus)
+      }
+      setIsDataUpdated(true)
+    }
+  }, [isLoadingCandidateScheduleLinkInfo, getCandidateScheduleLinkInfoError, candidateScheduleLinkInfo])
+
+  if (isLoadingCandidateScheduleLinkInfo || !isDataUpdated) {
+    return <ScheduleLinkLoading />
   }
 
   return (
     <ScheduleInterviewContext.Provider
       value={{
         logo: logoSvg,
-        candidateInterviewScheduleStatus: candidateInterviewScheduleStatus,
-        updateCandidateInterviewScheduleStatus: updateCandidateInterviewScheduleStatus,
-        interviewDates: interviewDates,
-        interviewInfo: interviewInfo,
-        updateInterviewInfo: updateInterviewInfo,
+        candidateInterviewScheduleStatus,
+        updateCandidateInterviewScheduleStatus: setCandidateInterviewScheduleStatus,
+        interviewDates,
+        interviewInfo,
+        updateInterviewInfo: setInterviewInfo,
+        isLoadingCandidateScheduleLinkInfo,
+        getCandidateScheduleLinkInfoError,
       }}
     >
       {children}
