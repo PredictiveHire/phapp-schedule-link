@@ -3,7 +3,7 @@ import { PHIcon } from "@ph/ui"
 import { Grid } from "antd"
 import React from "react"
 
-import { getICalContent } from "@/api/getICalFile"
+import { getICalContent } from "@/api/getICalContent"
 import { CandidateConfirmationInfo } from "@/pages/schedule-interview/components/CandidateConfirmation/CandidateConfirmationInfo"
 import { LIInterviewMode, LIInterviewModeLabel } from "@/pages/schedule-interview/constants"
 import { useScheduleInterview } from "@/pages/schedule-interview/hooks/useScheduleInterview"
