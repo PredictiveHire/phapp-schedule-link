@@ -3,6 +3,7 @@ import React from "react"
 
 import { CandidateConfirmationInfo } from "@/pages/schedule-interview/components/CandidateConfirmation"
 
+jest.mock("@/constants", () => ({}))
 describe("CandidateConfirmationInfo", () => {
   it("should renders title and description correctly", () => {
     const title = "Test Title"
