@@ -102,22 +102,25 @@ describe("CandidateConfirmation", () => {
       config: {},
     } as unknown as AxiosResponse)
 
-    const { getByText } = render(<CandidateConfirmation />)
-    const addToCalendarButton = getByText("Add to calendar")
+    const { getByRole } = render(<CandidateConfirmation />)
+    const addToCalendarButton = getByRole("button", {
+      name: "Add to calendar",
+    })
 
     act(() => {
       void user.click(addToCalendarButton)
     })
 
     await waitFor(() => {
-      expect(mockGetICalContent).toHaveBeenCalledTimes(1)
-      expect(mockDownloadICalFile).toHaveBeenCalledTimes(1)
       expect(getICalContent).toHaveBeenCalledWith("bed76d65-5360-43e7-b971-88462020dda2")
-      expect(downloadICalFile).toHaveBeenCalledWith(mockICalContent)
     })
+
+    expect(mockGetICalContent).toHaveBeenCalledTimes(1)
+    expect(mockDownloadICalFile).toHaveBeenCalledTimes(1)
+    expect(downloadICalFile).toHaveBeenCalledWith(mockICalContent)
   })
 
-  it("should not call getICalContent if iCalId is undefined", async () => {
+  it("should not call getICalContent if iCalId is undefined", () => {
     const user = userEvent.setup()
     mockUseScheduleInterview.mockReturnValue({
       ...mockScheduleInterviewContext,
@@ -127,17 +130,17 @@ describe("CandidateConfirmation", () => {
       },
     })
 
-    const { getByText } = render(<CandidateConfirmation />)
-    const addToCalendarButton = getByText("Add to calendar")
+    const { getByRole } = render(<CandidateConfirmation />)
+    const addToCalendarButton = getByRole("button", {
+      name: "Add to calendar",
+    })
 
     act(() => {
       void user.click(addToCalendarButton)
     })
 
-    await waitFor(() => {
-      expect(getICalContent).not.toHaveBeenCalled()
-      expect(downloadICalFile).not.toHaveBeenCalled()
-    })
+    expect(getICalContent).not.toHaveBeenCalled()
+    expect(downloadICalFile).not.toHaveBeenCalled()
   })
 
   it("should not call downloadICalFile if getICalContent returns empty data", async () => {
@@ -151,17 +154,19 @@ describe("CandidateConfirmation", () => {
       },
     })
 
-    const mockICalContent = ""
     mockGetICalContent.mockResolvedValue({
-      data: mockICalContent,
+      data: "",
       status: 200,
       statusText: "OK",
       headers: {},
       config: {},
     } as unknown as AxiosResponse)
 
-    const { getByText } = render(<CandidateConfirmation />)
-    const addToCalendarButton = getByText("Add to calendar")
+    const { getByRole } = render(<CandidateConfirmation />)
+
+    const addToCalendarButton = getByRole("button", {
+      name: "Add to calendar",
+    })
 
     act(() => {
       void user.click(addToCalendarButton)
@@ -169,7 +174,8 @@ describe("CandidateConfirmation", () => {
 
     await waitFor(() => {
       expect(getICalContent).toHaveBeenCalledWith("bed76d65-5360-43e7-b971-88462020dda2")
-      expect(downloadICalFile).not.toHaveBeenCalled()
     })
+
+    expect(downloadICalFile).not.toHaveBeenCalled()
   })
 })

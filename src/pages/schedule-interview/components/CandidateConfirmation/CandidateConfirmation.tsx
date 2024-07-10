@@ -1,6 +1,6 @@
 import { CalendarOutlined } from "@ant-design/icons"
 import { PHIcon } from "@ph/ui"
-import { Grid } from "antd"
+import { Grid, Space } from "antd"
 import React from "react"
 
 import { getICalContent } from "@/api/getICalContent"
@@ -74,15 +74,26 @@ export const CandidateConfirmation = () => {
           )}
           <CandidateConfirmationInfo title="Timezone" description={timezone} />
         </div>
-        <button
-          className="flex h-[49px] w-full items-center justify-center rounded-full bg-black"
-          onClick={() => {
-            void addToCalendar()
-          }}
-        >
-          <CalendarOutlined className="mr-2 text-2xl !text-white" />
-          <span className="text-white">Add to calendar</span>
-        </button>
+        <Space direction="vertical">
+          <button
+            aria-label="Add to calendar"
+            className="flex h-[49px] w-full items-center justify-center rounded-full bg-black"
+            onClick={() => {
+              void addToCalendar()
+            }}
+          >
+            <CalendarOutlined className="mr-2 text-2xl !text-white" />
+            <span className="text-white">Add to calendar</span>
+          </button>
+          {/* TODO: implement other buttons */}
+          {/* <button
+            aria-label="Cancel interview"
+            className="flex h-[49px] w-full items-center justify-center rounded-full bg-black"
+          >
+            <CalendarOutlined className="mr-2 text-2xl !text-white" />
+            <span className="text-white">Cancel interview</span>
+          </button> */}
+        </Space>
       </article>
     </div>
   )
