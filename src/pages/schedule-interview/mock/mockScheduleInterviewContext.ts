@@ -19,4 +19,6 @@ export const mockScheduleInterviewContext = {
   updateInterviewInfo: jest.fn(),
   updateCandidateInterviewScheduleStatus: jest.fn(),
   logo: "logo.svg",
+  isLoadingCandidateScheduleLinkInfo: false,
+  getCandidateScheduleLinkInfoError: undefined,
 }

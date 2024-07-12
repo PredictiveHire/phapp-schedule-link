@@ -6,7 +6,7 @@ import type {
   LiBookCandidateInterviewMutationVariables,
 } from "@/__generated__/graphql"
 
-import { LICandidateInterviewScheduleStatus } from "../constants"
+import { LICandidateInterviewScheduleStatus, LIInterviewMode } from "../constants"
 import { LIBookCandidateInterview } from "../graphql/mutation/bookCandidateInterview.gql"
 import { BookCandidateInterview } from "../type/bookCandidateInterview"
 import { useScheduleInterview } from "./useScheduleInterview"
@@ -19,11 +19,20 @@ export const useBookCandidateInterview = () => {
     LiBookCandidateInterviewMutationVariables
   >(LIBookCandidateInterview, {
     onCompleted: (data: { LIBookCandidateInterview: BookCandidateInterview }) => {
+      void message.success("Interview booked successfully")
       const { LIBookCandidateInterview } = data
       const { timezone, interviewStartsAt, interviewEndsAt, iCalId } = LIBookCandidateInterview
-      void message.success("Interview booked successfully")
+      const {
+        jobRequisitionName = "",
+        interviewMode = LIInterviewMode.IN_PERSON,
+        interviewAddress,
+        interviewLink,
+      } = interviewInfo ?? {}
       updateInterviewInfo({
-        ...interviewInfo,
+        jobRequisitionName,
+        interviewMode,
+        interviewAddress,
+        interviewLink,
         timezone,
         interviewStartsAt,
         interviewEndsAt,
