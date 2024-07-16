@@ -4757,6 +4757,7 @@ export type GetNotificationV2Dto = {
 export type GetOrganizationDto = {
   _id?: InputMaybe<Scalars['String']['input']>;
   activeOnly?: InputMaybe<Scalars['Boolean']['input']>;
+  customerActiveOnly?: InputMaybe<Scalars['Boolean']['input']>;
   uniqueName?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -5550,6 +5551,7 @@ export type LiInterviewScheduleCardBasicInfoCandidateEntity = {
   _id: Scalars['String']['output'];
   firstName: Scalars['String']['output'];
   lastName: Scalars['String']['output'];
+  shortcode: Scalars['String']['output'];
   start?: Maybe<Scalars['DateTime']['output']>;
   /** PENDING || COMPLETED */
   status: Scalars['String']['output'];
@@ -6107,6 +6109,7 @@ export type Mutation = {
   ORGGroupAddUsers: Array<Scalars['String']['output']>;
   ORGGroupRemoveUsers: Array<Scalars['String']['output']>;
   ORGInitGroupPolicy: Scalars['String']['output'];
+  ORGInitGroupPolicyV2: Scalars['String']['output'];
   /** Used to update organizationId, customerId, hierarchyId and username */
   ORGMigrateUser: UserEntity;
   ORGRemoveCustomerFromOrganization: OrganizationEntity;
@@ -7120,6 +7123,11 @@ export type MutationOrgGroupRemoveUsersArgs = {
 
 
 export type MutationOrgInitGroupPolicyArgs = {
+  filter: FilterGetGroupDto;
+};
+
+
+export type MutationOrgInitGroupPolicyV2Args = {
   filter: FilterGetGroupDto;
 };
 
@@ -9454,6 +9462,7 @@ export type StatementEntity = {
 
 export type SwitchableCustomer = {
   __typename?: 'SwitchableCustomer';
+  archivedAt?: Maybe<Scalars['DateTime']['output']>;
   awsRegion: Scalars['String']['output'];
   customerDisplayName: Scalars['String']['output'];
   customerId: Scalars['String']['output'];
