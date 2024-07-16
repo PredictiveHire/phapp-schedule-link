@@ -47,8 +47,17 @@ describe("getCandidateScheduleLinkInfoErrorMessage", () => {
   })
 
   it("should return the correct error message for TIMESLOTS_PASSED", () => {
-    const errorMessage = getCandidateScheduleLinkInfoErrorMessage(CandidateScheduleLinkInfoErrorCode.TIMESLOTS_PASSED)
-    expect(errorMessage).toBe("Sorry! This interview has passed. Please contact your recruiter.")
+    const errorMessage = getCandidateScheduleLinkInfoErrorMessage(
+      CandidateScheduleLinkInfoErrorCode.ALL_TIMESLOTS_PASSED
+    )
+    expect(errorMessage).toBe("Sorry! All time slots have passed. Please contact your recruiter.")
+  })
+
+  it("should return the correct error message for CANDIDATE_SCHEDULE_INTERVIEW_EVENT_NOT_CONSISTENT", () => {
+    const errorMessage = getCandidateScheduleLinkInfoErrorMessage(
+      CandidateScheduleLinkInfoErrorCode.CANDIDATE_SCHEDULE_INTERVIEW_EVENT_NOT_CONSISTENT
+    )
+    expect(errorMessage).toBe("Sorry! Candidate schedule and interview event are not consistent.")
   })
 
   it("should return the default error message for an unknown error code", () => {
