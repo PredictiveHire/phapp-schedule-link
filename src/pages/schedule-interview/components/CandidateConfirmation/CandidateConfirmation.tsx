@@ -1,18 +1,24 @@
 import { CalendarOutlined } from "@ant-design/icons"
 import { PHIcon } from "@ph/ui"
-import { Grid, Space } from "antd"
-import React from "react"
+import { Button, Grid, Space } from "antd"
+import React, { useState } from "react"
 
 import { getICalContent } from "@/api/getICalContent"
 import { CandidateConfirmationInfo } from "@/pages/schedule-interview/components/CandidateConfirmation/CandidateConfirmationInfo"
+import { useCandidateCancelInterview } from "@/pages/schedule-interview/components/CandidateConfirmation/hooks/useCandidateCancelInterview"
 import { LIInterviewMode, LIInterviewModeLabel } from "@/pages/schedule-interview/constants"
 import { useScheduleInterview } from "@/pages/schedule-interview/hooks/useScheduleInterview"
 import { formatDateToLongString, formatDateToTimeString } from "@/utils/dateTime"
 import { downloadICalFile } from "@/utils/downloadICalFile"
 
+import { CancelCandidateInterviewModal } from "./components/CancelCandidateInterviewModal"
+
 const { useBreakpoint } = Grid
 
 export const CandidateConfirmation = () => {
+  const [isCancelInterviewModalOpen, setIsCancelInterviewModalOpen] = useState(false)
+
+  const { isCancelCandidateInterviewLoading, cancelCandidateInterview } = useCandidateCancelInterview()
   const { interviewInfo } = useScheduleInterview()
   const {
     jobRequisitionName = "",
@@ -75,26 +81,50 @@ export const CandidateConfirmation = () => {
           <CandidateConfirmationInfo title="Timezone" description={timezone} />
         </div>
         <Space direction="vertical">
-          <button
+          <Button
             aria-label="Add to calendar"
-            className="flex h-[49px] w-full items-center justify-center rounded-full bg-black"
+            type="primary"
+            className="!h-button !bg-black !text-base"
+            block
+            shape="round"
+            icon={<CalendarOutlined className="text-2xl" />}
             onClick={() => {
               void addToCalendar()
             }}
           >
-            <CalendarOutlined className="mr-2 text-2xl !text-white" />
             <span className="text-white">Add to calendar</span>
-          </button>
-          {/* TODO: implement other buttons */}
-          {/* <button
-            aria-label="Cancel interview"
-            className="flex h-[49px] w-full items-center justify-center rounded-full bg-black"
+          </Button>
+          <Button aria-label="Reschedule Interview" className="!h-button !text-base !text-black" block shape="round">
+            Reschedule Interview
+          </Button>
+          <Button
+            aria-label="Cancel Interview"
+            onClick={() => {
+              setIsCancelInterviewModalOpen(true)
+            }}
+            className="!h-button !text-base"
+            danger
+            block
+            shape="round"
           >
-            <CalendarOutlined className="mr-2 text-2xl !text-white" />
-            <span className="text-white">Cancel interview</span>
-          </button> */}
+            Cancel Interview
+          </Button>
         </Space>
       </article>
+      <CancelCandidateInterviewModal
+        isCancelCandidateInterviewLoading={isCancelCandidateInterviewLoading}
+        isOpen={isCancelInterviewModalOpen}
+        onCancelDialog={() => {
+          setIsCancelInterviewModalOpen(false)
+        }}
+        onCancelCandidateInterview={() => {
+          void cancelCandidateInterview()
+        }}
+        jobRequisitionName={jobRequisitionName}
+        interviewDate={interviewDate}
+        interviewStartDateTime={interviewStartDateTime}
+        interviewEndDateTime={interviewEndDateTime}
+      />
     </div>
   )
 }

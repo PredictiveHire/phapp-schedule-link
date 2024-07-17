@@ -121,6 +121,7 @@ export default {
         "linear-background": "255px",
         "mobile-talent-insights": "calc(100% - 3.5rem)",
         "action-bar": "4rem",
+        button: "49px",
       },
       keyframes: {
         "accordion-down": {
