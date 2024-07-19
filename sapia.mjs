@@ -57,13 +57,13 @@ if (argv._.length > 0) {
   const mode = argv._.pop()
   switch (mode) {
     case "setup:ssl":
-      const setupAlready = await updateHosts("schedule.local.sapia.ai", "Schedule Link App")
+      const setupAlready = await updateHosts("schedulelink.local.sapia.ai", "Schedule Link App")
       if (setupAlready === true) {
         console.log("🖼 SSL Certificates will be skipped")
         break
       }
       console.log("✅ Local domains have been setup successfully")
-      await setupCertificates("sapia.local", "schedule.local.sapia.ai")
+      await setupCertificates("sapia.local", "schedulelink.local.sapia.ai")
       console.log("✅ SSL Certificates has been setup successfully")
       break
     default:
