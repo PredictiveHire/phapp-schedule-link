@@ -17,12 +17,12 @@ export default defineConfig({
     process.env.NODE_ENV === "development"
       ? {
           open: true,
-          host: "schedule.local.sapia.ai",
+          host: "schedulelink.local.sapia.ai",
           port: 2443,
           strictPort: true,
           https: {
-            key: fs.readFileSync(path.resolve(__dirname, "./dev-certs/schedule.local.sapia.ai.key")),
-            cert: fs.readFileSync(path.resolve(__dirname, "./dev-certs/schedule.local.sapia.ai.crt")),
+            key: fs.readFileSync(path.resolve(__dirname, "./dev-certs/schedulelink.local.sapia.ai.key")),
+            cert: fs.readFileSync(path.resolve(__dirname, "./dev-certs/schedulelink.local.sapia.ai.crt")),
           },
           proxy: {
             "^/api/ap-southeast-2/.*": {
