@@ -5,6 +5,7 @@ import React from "react"
 
 import { getICalContent } from "@/api/getICalContent"
 import { CandidateConfirmation } from "@/pages/schedule-interview/components/CandidateConfirmation"
+import { useCandidateCancelInterview } from "@/pages/schedule-interview/components/CandidateConfirmation/hooks/useCandidateCancelInterview"
 import { LIInterviewMode, LIInterviewModeLabel } from "@/pages/schedule-interview/constants"
 import { useScheduleInterview } from "@/pages/schedule-interview/hooks/useScheduleInterview"
 import {
@@ -35,6 +36,14 @@ jest.mock("@/pages/schedule-interview/hooks/useScheduleInterview")
 const mockUseScheduleInterview = (
   useScheduleInterview as jest.MockedFunction<typeof useScheduleInterview>
 ).mockReturnValue(mockScheduleInterviewContext)
+
+jest.mock("@/pages/schedule-interview/components/CandidateConfirmation/hooks/useCandidateCancelInterview")
+const mockUseCandidateCancelInterview = (
+  useCandidateCancelInterview as jest.MockedFunction<typeof useCandidateCancelInterview>
+).mockReturnValue({
+  isCancelCandidateInterviewLoading: false,
+  cancelCandidateInterview: jest.fn(),
+})
 
 describe("CandidateConfirmation", () => {
   afterEach(() => {
@@ -75,11 +84,28 @@ describe("CandidateConfirmation", () => {
     expect(screen.getByText("https://example.com/interview")).toBeInTheDocument()
   })
 
-  it('has an "Add to calendar" button', () => {
+  it("should render correct buttons", () => {
     render(<CandidateConfirmation />)
-    const button = screen.getByRole("button", { name: /add to calendar/i })
-    expect(button).toBeInTheDocument()
-    expect(button).toHaveClass("bg-black")
+    const addToCalendarButton = screen.getByRole("button", { name: /Add to calendar/i })
+    const cancelInterviewButton = screen.getByRole("button", { name: /Cancel interview/i })
+    const rescheduleInterviewButton = screen.getByRole("button", { name: /Reschedule interview/i })
+
+    expect(addToCalendarButton).toBeInTheDocument()
+    expect(cancelInterviewButton).toBeInTheDocument()
+    expect(rescheduleInterviewButton).toBeInTheDocument()
+  })
+
+  it("should open cancel interview modal when cancel interview button is clicked", async () => {
+    const user = userEvent.setup()
+    render(<CandidateConfirmation />)
+    const cancelInterviewButton = screen.getByRole("button", { name: /cancel interview/i })
+
+    await act(async () => {
+      await user.click(cancelInterviewButton)
+    })
+
+    const modal = screen.getByRole("dialog")
+    expect(modal).toBeInTheDocument()
   })
 
   it("should call getICalContent and downloadICalFile when Add to calendar is clicked", async () => {
