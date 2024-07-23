@@ -8,9 +8,10 @@ import { useInterviewDateChange } from "@/pages/schedule-interview/components/Mo
 import { SelectTimeSlotsRadioGroup } from "@/pages/schedule-interview/components/SelectTimeSlotsRadioGroup/SelectTimeSlotsRadioGroup"
 import { useBookInterviewNow } from "@/pages/schedule-interview/hooks/useBookInterviewNow"
 import { useFormatTimeSlots } from "@/pages/schedule-interview/hooks/useFormatTimeSlots"
+import { useRescheduleInterview } from "@/pages/schedule-interview/hooks/useRescheduleInterview"
 import { useSelectTimeSlot } from "@/pages/schedule-interview/hooks/useSelectTimeSlot"
 import { InterviewTimeSlot } from "@/pages/schedule-interview/type"
-import { cn } from "@/utils"
+import { cn, isReschedulePage } from "@/utils"
 import { formatDateToLongString, getFormattedDate } from "@/utils/dateTime"
 
 import styles from "./styles.module.css"
@@ -19,12 +20,16 @@ export interface InterviewTimeSlotBookingProps {
   closeBooking: () => void
   interviewTimes: InterviewTimeSlot[]
   initialDate: Dayjs
+  defaultTimeSlotId?: string
 }
+
+const isReschedule = isReschedulePage()
 
 export const MobileInterviewTimeSlotBooking: React.FC<InterviewTimeSlotBookingProps> = ({
   closeBooking,
   interviewTimes,
   initialDate,
+  defaultTimeSlotId,
 }) => {
   const availableDates = [
     ...new Set(interviewTimes.map((slot: InterviewTimeSlot) => getFormattedDate(new Date(slot.start)))),
@@ -35,15 +40,27 @@ export const MobileInterviewTimeSlotBooking: React.FC<InterviewTimeSlotBookingPr
   })
 
   const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-  const { selectedTimeSlotId, handleTimeSlotChange } = useSelectTimeSlot()
+  const { selectedTimeSlotId, handleTimeSlotChange } = useSelectTimeSlot({
+    defaultTimeSlotId,
+  })
   const { handleBookInterviewNow, isBookCandidateInterviewLoading } = useBookInterviewNow()
+  const { handleRescheduleInterview, isRescheduleInterviewLoading } = useRescheduleInterview()
 
   const { formatTimeSlots } = useFormatTimeSlots()
   const timeSlots = formatTimeSlots(interviewTimes, currentDate)
 
   const { shortcode = "" } = useParams()
+
   const handleClickBookInterviewNow = () => {
     void handleBookInterviewNow({
+      timeslotId: selectedTimeSlotId || "",
+      shortcode: shortcode,
+      candidateTimezone: userTimezone,
+    })
+  }
+
+  const handleClickRescheduleInterview = () => {
+    handleRescheduleInterview({
       timeslotId: selectedTimeSlotId || "",
       shortcode: shortcode,
       candidateTimezone: userTimezone,
@@ -86,13 +103,27 @@ export const MobileInterviewTimeSlotBooking: React.FC<InterviewTimeSlotBookingPr
         selectedTimeSlotId={selectedTimeSlotId}
         handleTimeSlotChange={handleTimeSlotChange}
       />
-      <Button
-        className={cn(["buttonBook mt-4 w-full text-base font-normal", selectedTimeSlotId ? "active" : ""])}
-        onClick={handleClickBookInterviewNow}
-        loading={isBookCandidateInterviewLoading}
-      >
-        Book interview now
-      </Button>
+      {isReschedule ? (
+        <Button
+          className={cn([
+            "buttonBook mt-4 w-full text-base font-normal",
+            selectedTimeSlotId !== defaultTimeSlotId ? "active" : "",
+          ])}
+          disabled={selectedTimeSlotId === defaultTimeSlotId}
+          onClick={handleClickRescheduleInterview}
+          loading={isRescheduleInterviewLoading}
+        >
+          Reschedule interview
+        </Button>
+      ) : (
+        <Button
+          className={cn(["buttonBook mt-4 w-full text-base font-normal", selectedTimeSlotId ? "active" : ""])}
+          onClick={handleClickBookInterviewNow}
+          loading={isBookCandidateInterviewLoading}
+        >
+          Book interview now
+        </Button>
+      )}
     </div>
   )
 }

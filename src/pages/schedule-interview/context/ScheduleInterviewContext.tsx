@@ -44,6 +44,9 @@ export const ScheduleInterviewProvider: React.FC<{ children: ReactNode }> = ({ c
           end: timeslot.end,
           timeslotId: timeslot._id,
         }))
+
+        // TODO: replace timeSlotId from interviewEvent
+        const selectedTimeSlotId = "110000000000000000000005"
         setInterviewDates(formattedInterviewDates)
 
         setInterviewInfo({
@@ -55,6 +58,7 @@ export const ScheduleInterviewProvider: React.FC<{ children: ReactNode }> = ({ c
           interviewStartsAt: interviewEvent?.interviewStartsAt ?? "",
           interviewEndsAt: interviewEvent?.interviewEndsAt ?? "",
           iCalId: interviewEvent?.iCalId ?? "",
+          selectedTimeSlotId: (interviewEvent && selectedTimeSlotId) ?? "",
         })
 
         setCandidateInterviewScheduleStatus(candidateScheduleStatus)

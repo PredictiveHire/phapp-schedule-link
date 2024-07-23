@@ -12,6 +12,7 @@ export interface CandidateInterviewScheduleInfo {
   interviewEndsAt?: string
   timezone?: string
   iCalId?: string
+  selectedTimeSlotId?: string
 }
 
 export type ScheduleInterviewContextType = {
