@@ -10,20 +10,33 @@ import { useBookInterviewNow } from "@/pages/schedule-interview/hooks/useBookInt
 import { useCalendarHeader } from "@/pages/schedule-interview/hooks/useCalendarHeader"
 import { useFormatTimeSlots } from "@/pages/schedule-interview/hooks/useFormatTimeSlots"
 import { useInterviewDate } from "@/pages/schedule-interview/hooks/useInterviewDate"
+import { useRescheduleInterview } from "@/pages/schedule-interview/hooks/useRescheduleInterview"
 import { useSelectTimeSlot } from "@/pages/schedule-interview/hooks/useSelectTimeSlot"
-import { cn } from "@/utils"
+import { cn, isReschedulePage } from "@/utils"
 import { formatDateToLongString, formatDayjs } from "@/utils/dateTime"
 
 import styles from "./styles.module.css"
 
-export const DesktopInterviewTimeSlotBooking: React.FC = () => {
-  const { selectedTimeSlotId, handleTimeSlotChange } = useSelectTimeSlot()
+interface IProps {
+  defaultTimeSlotId?: string
+}
+
+const isReschedule = isReschedulePage()
+
+export const DesktopInterviewTimeSlotBooking = ({ defaultTimeSlotId }: IProps) => {
+  const { selectedTimeSlotId, handleTimeSlotChange } = useSelectTimeSlot({
+    defaultTimeSlotId,
+  })
+
   const { initialInterviewDate, interviewDate, isInterviewDate, disabledDate, handleDateChange, interviewDates } =
     useInterviewDate()
+
   const { handleBookInterviewNow, isBookCandidateInterviewLoading } = useBookInterviewNow()
+  const { handleRescheduleInterview, isRescheduleInterviewLoading } = useRescheduleInterview()
 
   const { formatTimeSlots } = useFormatTimeSlots()
   const currentDate = formatDayjs(interviewDate)
+
   const timeSlots = formatTimeSlots(interviewDates, currentDate)
   const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
@@ -32,6 +45,7 @@ export const DesktopInterviewTimeSlotBooking: React.FC = () => {
 
   const { handleClickLeftOutline, handleClickRightOutline } = useCalendarHeader()
   const { shortcode = "" } = useParams()
+
   const handleClickBookInterviewNow = () => {
     void handleBookInterviewNow({
       timeslotId: selectedTimeSlotId || "",
@@ -39,6 +53,15 @@ export const DesktopInterviewTimeSlotBooking: React.FC = () => {
       candidateTimezone: userTimezone,
     })
   }
+
+  const handleClickRescheduleInterview = () => {
+    handleRescheduleInterview({
+      timeslotId: selectedTimeSlotId || "",
+      shortcode: shortcode,
+      candidateTimezone: userTimezone,
+    })
+  }
+
   const headerRender = ({ value, onChange }: { value: Dayjs; onChange: (date: Dayjs) => void }) => (
     <div className="mb-4 flex items-center justify-between px-5">
       <LeftOutlined
@@ -62,7 +85,7 @@ export const DesktopInterviewTimeSlotBooking: React.FC = () => {
       <div
         className={cn([
           "ant-picker-cell-inner ant-picker-calendar-date rounded-full text-center",
-          isInterviewDate(value) ? "text-secondary bg-[rgba(0,0,0,0.04)] text-base" : "text-sm text-black/50",
+          isInterviewDate(value) ? "bg-[rgba(0,0,0,0.04)] text-base text-text-secondary" : "text-sm text-black/50",
           isInitialAndCurrentDate(value) && "bg-sapia-pink",
         ])}
       >
@@ -76,6 +99,7 @@ export const DesktopInterviewTimeSlotBooking: React.FC = () => {
       <section className="flex justify-between">
         <section>
           <Calendar
+            defaultValue={interviewDate}
             className={cn(["w-[316px]", styles.interviewTimeSlotBookingCalendar])}
             fullscreen={false}
             headerRender={headerRender}
@@ -100,13 +124,28 @@ export const DesktopInterviewTimeSlotBooking: React.FC = () => {
           </div>
         </section>
       </section>
-      <Button
-        className={cn(["mt-4 w-full text-base font-normal", styles.buttonBook, selectedTimeSlotId ? "active" : ""])}
-        onClick={handleClickBookInterviewNow}
-        loading={isBookCandidateInterviewLoading}
-      >
-        Book interview now
-      </Button>
+      {isReschedule ? (
+        <Button
+          className={cn([
+            "mt-4 w-full text-base font-normal",
+            styles.buttonBook,
+            selectedTimeSlotId !== defaultTimeSlotId ? "active" : "",
+          ])}
+          disabled={selectedTimeSlotId === defaultTimeSlotId}
+          onClick={handleClickRescheduleInterview}
+          loading={isRescheduleInterviewLoading}
+        >
+          Reschedule interview
+        </Button>
+      ) : (
+        <Button
+          className={cn(["mt-4 w-full text-base font-normal", styles.buttonBook, selectedTimeSlotId ? "active" : ""])}
+          onClick={handleClickBookInterviewNow}
+          loading={isBookCandidateInterviewLoading}
+        >
+          Book interview now
+        </Button>
+      )}
     </div>
   )
 }

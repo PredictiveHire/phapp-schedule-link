@@ -22,6 +22,7 @@ export const MobileCandidateSelectInterviewTime = () => {
     interviewMode = LIInterviewMode.IN_PERSON,
     interviewAddress = "",
     interviewLink = "",
+    selectedTimeSlotId = "",
   } = interviewInfo ?? {}
 
   const { handleClickLeftOutline, handleClickRightOutline } = useCalendarHeader()
@@ -49,7 +50,7 @@ export const MobileCandidateSelectInterviewTime = () => {
     <div
       className={cn([
         "ant-picker-cell-inner ant-picker-calendar-date rounded-full text-center",
-        `${isInterviewDate(value) ? "text-secondary text-secondary bg-sapia-pink text-base" : "text-sm text-black/50"}`,
+        `${isInterviewDate(value) ? "!bg-sapia-pink !text-base !text-text-secondary" : "!text-sm !text-black/50"}`,
       ])}
       onClick={() => handleClickDate(value)}
     >
@@ -64,6 +65,7 @@ export const MobileCandidateSelectInterviewTime = () => {
     >
       {showTimeSlotBooking ? (
         <MobileInterviewTimeSlotBooking
+          defaultTimeSlotId={selectedTimeSlotId}
           closeBooking={() => setShowTimeSlotBooking(false)}
           interviewTimes={interviewDates}
           initialDate={interviewDate}
@@ -72,6 +74,7 @@ export const MobileCandidateSelectInterviewTime = () => {
         <div className="mx-auto w-full rounded-[20px] bg-white p-5 shadow-card">
           <InterviewInfo interviewInfo={{ jobRequisitionName, interviewMode, interviewAddress, interviewLink, logo }} />
           <Calendar
+            defaultValue={interviewDate}
             fullscreen={false}
             headerRender={headerRender}
             fullCellRender={fullCellRender}

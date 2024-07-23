@@ -89,7 +89,7 @@ describe("DesktopInterviewTimeSlotBooking", () => {
   it("should render the calendar header correctly", () => {
     render(<DesktopInterviewTimeSlotBooking />)
 
-    expect(screen.getByText(dayjs().format("MMMM YYYY"))).toBeInTheDocument()
+    expect(screen.getByText("June 2024")).toBeInTheDocument()
     expect(screen.getByRole("img", { name: /left/i })).toBeInTheDocument()
     expect(screen.getByRole("img", { name: /right/i })).toBeInTheDocument()
   })
@@ -113,7 +113,7 @@ describe("DesktopInterviewTimeSlotBooking", () => {
     })
 
     render(<DesktopInterviewTimeSlotBooking />)
-    const dateTestId = dayjs().format(DATE_FORMAT)
+    const dateTestId = dayjs("June 13, 2024").format(DATE_FORMAT)
     const dateCell = screen.getByTestId(dateTestId)
     await user.click(dateCell)
 
@@ -130,7 +130,11 @@ describe("DesktopInterviewTimeSlotBooking", () => {
     const radioButton = screen.getByText("10:00 AM - 11:00 AM")
     await user.click(radioButton)
 
-    expect(mockUseSelectTimeSlot().handleTimeSlotChange).toHaveBeenCalledWith("2")
+    expect(
+      mockUseSelectTimeSlot({
+        defaultTimeSlotId: undefined,
+      }).handleTimeSlotChange
+    ).toHaveBeenCalledWith("2")
   })
 
   it("should handle booking interview now button click", async () => {

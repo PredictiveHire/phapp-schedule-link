@@ -4,23 +4,16 @@ import { DesktopCandidateSelectInterviewTime } from "@/pages/schedule-interview/
 import { MobileCandidateSelectInterviewTime } from "@/pages/schedule-interview/components/MobileCandidateSelectInterviewTime"
 import { useScheduleInterview } from "@/pages/schedule-interview/hooks/useScheduleInterview"
 
-import { LICandidateInterviewScheduleStatus } from "../../constants"
-import { CandidateConfirmation } from "../CandidateConfirmation"
 import { CandidateScheduleError } from "../CandidateScheduleError"
 
 const { useBreakpoint } = Grid
 
-export const ScheduleInterview = () => {
+export const RescheduleInterview = () => {
   const isDesktop = useBreakpoint().lg
-  const { candidateInterviewScheduleStatus, isLoadingCandidateScheduleLinkInfo, getCandidateScheduleLinkInfoError } =
-    useScheduleInterview()
+  const { isLoadingCandidateScheduleLinkInfo, getCandidateScheduleLinkInfoError } = useScheduleInterview()
 
   if (!isLoadingCandidateScheduleLinkInfo && getCandidateScheduleLinkInfoError) {
     return <CandidateScheduleError getCandidateScheduleLinkInfoError={getCandidateScheduleLinkInfoError} />
-  }
-
-  if (candidateInterviewScheduleStatus === LICandidateInterviewScheduleStatus.CONFIRMED) {
-    return <CandidateConfirmation />
   }
 
   if (isDesktop) {
