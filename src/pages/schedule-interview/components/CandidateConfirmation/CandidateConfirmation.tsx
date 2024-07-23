@@ -3,10 +3,10 @@ import { PHIcon } from "@ph/ui"
 import { Button, Grid, Space } from "antd"
 import React, { useState } from "react"
 
-import { getICalContent } from "@/api/getICalContent"
 import { CandidateConfirmationInfo } from "@/pages/schedule-interview/components/CandidateConfirmation/CandidateConfirmationInfo"
 import { useCandidateCancelInterview } from "@/pages/schedule-interview/components/CandidateConfirmation/hooks/useCandidateCancelInterview"
 import { LIInterviewMode, LIInterviewModeLabel } from "@/pages/schedule-interview/constants"
+import { useGenerateEventICalInfo } from "@/pages/schedule-interview/hooks/useGenerateEventICalInfo"
 import { useScheduleInterview } from "@/pages/schedule-interview/hooks/useScheduleInterview"
 import { formatDateToLongString, formatDateToTimeString } from "@/utils/dateTime"
 import { downloadICalFile } from "@/utils/downloadICalFile"
@@ -20,6 +20,7 @@ export const CandidateConfirmation = () => {
 
   const { isCancelCandidateInterviewLoading, cancelCandidateInterview } = useCandidateCancelInterview()
   const { interviewInfo } = useScheduleInterview()
+  const { generateEventICalInfo } = useGenerateEventICalInfo()
   const {
     jobRequisitionName = "",
     interviewMode = LIInterviewMode.IN_PERSON,
@@ -40,14 +41,23 @@ export const CandidateConfirmation = () => {
     iconSize = 191 // icon size for desktop
   }
 
-  const addToCalendar = async (): Promise<void> => {
+  const addToCalendar = async () => {
     if (!iCalId) {
       return
     }
-    const res = await getICalContent(iCalId)
-    const iCalContent = res.data as string
-    if (iCalContent) {
-      downloadICalFile(iCalContent)
+
+    const result = await generateEventICalInfo({
+      variables: {
+        input: {
+          iCalId,
+        },
+      },
+    })
+    if (result.data?.LIGenerateEventICalInfo) {
+      const { iCalContent } = result.data.LIGenerateEventICalInfo
+      if (iCalContent) {
+        downloadICalFile(iCalContent, "interview.ics")
+      }
     }
   }
 
@@ -94,6 +104,7 @@ export const CandidateConfirmation = () => {
           >
             <span className="text-white">Add to calendar</span>
           </Button>
+
           <Button aria-label="Reschedule Interview" className="!h-button !text-base !text-black" block shape="round">
             Reschedule Interview
           </Button>

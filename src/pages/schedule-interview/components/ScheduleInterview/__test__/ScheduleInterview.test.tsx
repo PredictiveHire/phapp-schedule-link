@@ -20,6 +20,8 @@ jest.mock("antd", () => ({
   },
 }))
 
+jest.mock("@rollbar/react")
+
 // Mock the useScheduleInterview hook
 jest.mock("@/pages/schedule-interview/hooks/useScheduleInterview")
 const mockedUseScheduleInterview = useScheduleInterview as jest.MockedFunction<typeof useScheduleInterview>

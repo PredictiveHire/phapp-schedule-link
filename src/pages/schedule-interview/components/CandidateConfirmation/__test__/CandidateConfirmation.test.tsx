@@ -1,12 +1,11 @@
 import { act, render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { AxiosResponse } from "axios"
 import React from "react"
 
-import { getICalContent } from "@/api/getICalContent"
 import { CandidateConfirmation } from "@/pages/schedule-interview/components/CandidateConfirmation"
 import { useCandidateCancelInterview } from "@/pages/schedule-interview/components/CandidateConfirmation/hooks/useCandidateCancelInterview"
 import { LIInterviewMode, LIInterviewModeLabel } from "@/pages/schedule-interview/constants"
+import { useGenerateEventICalInfo } from "@/pages/schedule-interview/hooks/useGenerateEventICalInfo"
 import { useScheduleInterview } from "@/pages/schedule-interview/hooks/useScheduleInterview"
 import {
   interviewInfo,
@@ -26,8 +25,13 @@ jest.mock("antd", () => {
   }
 })
 
-jest.mock("@/api/getICalContent")
-const mockGetICalContent = getICalContent as jest.MockedFunction<typeof getICalContent>
+const mockGenerateEventICalInfo = jest.fn().mockResolvedValue({
+  data: {
+    LIGenerateEventICalInfo: {
+      iCalContent: "test content",
+    },
+  },
+})
 
 jest.mock("@/utils/downloadICalFile")
 const mockDownloadICalFile = downloadICalFile as jest.MockedFunction<typeof downloadICalFile>
@@ -43,6 +47,14 @@ const mockUseCandidateCancelInterview = (
 ).mockReturnValue({
   isCancelCandidateInterviewLoading: false,
   cancelCandidateInterview: jest.fn(),
+})
+
+jest.mock("@/pages/schedule-interview/hooks/useGenerateEventICalInfo")
+const mockUseGenerateEventICalInfo = (
+  useGenerateEventICalInfo as jest.MockedFunction<typeof useGenerateEventICalInfo>
+).mockReturnValue({
+  isGenerateEventICalInfoLoading: false,
+  generateEventICalInfo: mockGenerateEventICalInfo,
 })
 
 describe("CandidateConfirmation", () => {
@@ -108,7 +120,7 @@ describe("CandidateConfirmation", () => {
     expect(modal).toBeInTheDocument()
   })
 
-  it("should call getICalContent and downloadICalFile when Add to calendar is clicked", async () => {
+  it("should call generateEventICalInfo and downloadICalFile when Add to calendar is clicked", async () => {
     const user = userEvent.setup()
 
     mockUseScheduleInterview.mockReturnValue({
@@ -119,14 +131,10 @@ describe("CandidateConfirmation", () => {
       },
     })
 
-    const mockICalContent = "mock iCal content"
-    mockGetICalContent.mockResolvedValue({
-      data: mockICalContent,
-      status: 200,
-      statusText: "OK",
-      headers: {},
-      config: {},
-    } as unknown as AxiosResponse)
+    mockUseGenerateEventICalInfo.mockReturnValue({
+      isGenerateEventICalInfoLoading: false,
+      generateEventICalInfo: mockGenerateEventICalInfo,
+    })
 
     const { getByRole } = render(<CandidateConfirmation />)
     const addToCalendarButton = getByRole("button", {
@@ -138,15 +146,13 @@ describe("CandidateConfirmation", () => {
     })
 
     await waitFor(() => {
-      expect(getICalContent).toHaveBeenCalledWith("bed76d65-5360-43e7-b971-88462020dda2")
+      expect(mockGenerateEventICalInfo).toHaveBeenCalledTimes(1)
     })
-
-    expect(mockGetICalContent).toHaveBeenCalledTimes(1)
     expect(mockDownloadICalFile).toHaveBeenCalledTimes(1)
-    expect(downloadICalFile).toHaveBeenCalledWith(mockICalContent)
+    expect(downloadICalFile).toHaveBeenCalledWith("test content", "interview.ics")
   })
 
-  it("should not call getICalContent if iCalId is undefined", () => {
+  it("should not call generateEventICalInfo if iCalId is undefined", () => {
     const user = userEvent.setup()
     mockUseScheduleInterview.mockReturnValue({
       ...mockScheduleInterviewContext,
@@ -165,11 +171,11 @@ describe("CandidateConfirmation", () => {
       void user.click(addToCalendarButton)
     })
 
-    expect(getICalContent).not.toHaveBeenCalled()
+    expect(mockGenerateEventICalInfo).not.toHaveBeenCalled()
     expect(downloadICalFile).not.toHaveBeenCalled()
   })
 
-  it("should not call downloadICalFile if getICalContent returns empty data", async () => {
+  it("should not call downloadICalFile if generateEventICalInfo returns empty data", async () => {
     const user = userEvent.setup()
 
     mockUseScheduleInterview.mockReturnValue({
@@ -180,13 +186,18 @@ describe("CandidateConfirmation", () => {
       },
     })
 
-    mockGetICalContent.mockResolvedValue({
-      data: "",
-      status: 200,
-      statusText: "OK",
-      headers: {},
-      config: {},
-    } as unknown as AxiosResponse)
+    const mockGenerateEventICalInfo = jest.fn().mockResolvedValue({
+      data: {
+        LIGenerateEventICalInfo: {
+          iCalContent: null,
+        },
+      },
+    })
+
+    mockUseGenerateEventICalInfo.mockReturnValue({
+      isGenerateEventICalInfoLoading: false,
+      generateEventICalInfo: mockGenerateEventICalInfo,
+    })
 
     const { getByRole } = render(<CandidateConfirmation />)
 
@@ -199,7 +210,13 @@ describe("CandidateConfirmation", () => {
     })
 
     await waitFor(() => {
-      expect(getICalContent).toHaveBeenCalledWith("bed76d65-5360-43e7-b971-88462020dda2")
+      expect(mockGenerateEventICalInfo).toHaveBeenCalledWith({
+        variables: {
+          input: {
+            iCalId: "bed76d65-5360-43e7-b971-88462020dda2",
+          },
+        },
+      })
     })
 
     expect(downloadICalFile).not.toHaveBeenCalled()
