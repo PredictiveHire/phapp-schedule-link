@@ -16,8 +16,8 @@ export const InterviewInfo = ({
 }: InterviewInfoProps) => {
   return (
     <div data-testid="interview-info" className="mb-10 w-[310px] text-left">
-      <img src={logo} alt="Logo" className="h-11" />
-      <h1 className="mb-0 mt-5 text-sm font-semibold text-black">{jobRequisitionName}</h1>
+      {logo && <img src={logo} alt="Logo" className="mb-5 h-11" />}
+      <h1 className="mb-0 text-sm font-semibold text-black">{jobRequisitionName}</h1>
       <InterviewInfoItem title="Interview Type" description={LIInterviewModeLabel[interviewMode]} />
       {interviewMode === LIInterviewMode.IN_PERSON && interviewAddress && (
         <InterviewInfoItem title="Location" description={interviewAddress} />

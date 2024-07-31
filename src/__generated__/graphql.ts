@@ -5229,7 +5229,7 @@ export type LiApplicationEntity = {
 export type LiBookCandidateInterviewDto = {
   candidateTimezone?: InputMaybe<Scalars['String']['input']>;
   shortcode: Scalars['String']['input'];
-  /** The shortcode of candidate schedule */
+  /** The id of timeslot */
   timeslotId: Scalars['String']['input'];
 };
 
@@ -5271,6 +5271,7 @@ export type LiCandidateScheduleEntity = {
   hierarchyId: Scalars['String']['output'];
   interviewEventId?: Maybe<Scalars['String']['output']>;
   interviewScheduleId: Scalars['String']['output'];
+  interviewStage: Scalars['String']['output'];
   jobRequisitionId: Scalars['String']['output'];
   organizationId: Scalars['String']['output'];
   shortcode: Scalars['String']['output'];
@@ -5279,6 +5280,11 @@ export type LiCandidateScheduleEntity = {
   tags: Array<LiTagEntity>;
   timezone: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
+};
+
+export type LiCandidateScheduleLinkBrandingEntity = {
+  __typename?: 'LICandidateScheduleLinkBrandingEntity';
+  logoUrl?: Maybe<Scalars['String']['output']>;
 };
 
 export type LiCandidateScheduleLinkInfoEntity = {
@@ -5354,6 +5360,7 @@ export type LiCreateInterviewScheduleDto = {
   interviewLink?: InputMaybe<Scalars['String']['input']>;
   interviewMode: Scalars['String']['input'];
   interviewName: Scalars['String']['input'];
+  interviewStage?: InputMaybe<Scalars['String']['input']>;
   interviewers: Array<LiCreateInterviewScheduleInterviewerDto>;
   jobRequisitionId: Scalars['String']['input'];
   notesForCandidates?: InputMaybe<Scalars['String']['input']>;
@@ -5466,6 +5473,10 @@ export type LiCreateTimeslotDto = {
   start: Scalars['String']['input'];
 };
 
+export type LiGenerateEventICalDto = {
+  iCalId: Scalars['String']['input'];
+};
+
 export type LiGenerateS3PreSignedDownloadUrlDto = {
   /** the customerId of the interview schedule */
   customerId: Scalars['String']['input'];
@@ -5490,11 +5501,21 @@ export type LiGenerateTimeslotsDto = {
   userPrompt: Scalars['String']['input'];
 };
 
+export type LiGeneratedEventICalEntity = {
+  __typename?: 'LIGeneratedEventICalEntity';
+  iCalContent: Scalars['String']['output'];
+};
+
 /** Get application detail by organizationId and applicationId or externalApplicationId, you must input one of [applicationId, externalApplicationId] */
 export type LiGetApplicationDetailDto = {
   applicationId?: InputMaybe<Scalars['String']['input']>;
   externalApplicationId?: InputMaybe<Scalars['String']['input']>;
   organizationId: Scalars['String']['input'];
+};
+
+/** Get branding by shortcode */
+export type LiGetBrandingByShortcodeDto = {
+  shortcode: Scalars['String']['input'];
 };
 
 /** Get candidate schedule link info by shortcode */
@@ -5523,6 +5544,13 @@ export type LiGetInterviewScheduleCardCandidatesWithoutPaginationDto = {
   organizationId: Scalars['String']['input'];
   /** UNSCHEDULED || PENDING || CONFIRMED */
   status: Scalars['String']['input'];
+};
+
+export type LiGetInterviewScheduleCardDetailDto = {
+  customerId?: InputMaybe<Scalars['String']['input']>;
+  hierarchyId?: InputMaybe<Scalars['String']['input']>;
+  interviewScheduleId: Scalars['String']['input'];
+  organizationId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Get interviewSchedule detail by organizationId and interviewScheduleId or interviewUniqueName, you must input one of [interviewScheduleId, interviewUniqueName] */
@@ -5568,7 +5596,7 @@ export type LiInterviewScheduleCardBasicInfoCandidateEntity = {
   interviewEndTime?: Maybe<Scalars['DateTime']['output']>;
   interviewStartTime?: Maybe<Scalars['DateTime']['output']>;
   lastName: Scalars['String']['output'];
-  shortcode: Scalars['String']['output'];
+  shortcode?: Maybe<Scalars['String']['output']>;
   /** PENDING || COMPLETED */
   status?: Maybe<Scalars['String']['output']>;
 };
@@ -5623,6 +5651,70 @@ export type LiInterviewScheduleCardCandidateEntity = {
   scheduledInterviewTime?: Maybe<Scalars['DateTime']['output']>;
 };
 
+export type LiInterviewScheduleCardDetailCandidateEntity = {
+  __typename?: 'LIInterviewScheduleCardDetailCandidateEntity';
+  /** the id of candidate */
+  _id: Scalars['String']['output'];
+  email: Scalars['String']['output'];
+  firstName: Scalars['String']['output'];
+  lastName: Scalars['String']['output'];
+  phoneNumber: Scalars['String']['output'];
+};
+
+export type LiInterviewScheduleCardDetailEntity = {
+  __typename?: 'LIInterviewScheduleCardDetailEntity';
+  _id: Scalars['ID']['output'];
+  archivedAt?: Maybe<Scalars['DateTime']['output']>;
+  candidates: Array<LiInterviewScheduleCardDetailCandidateEntity>;
+  createdAt: Scalars['DateTime']['output'];
+  customerId: Scalars['String']['output'];
+  /** Timezone in IANA format: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones */
+  defaultTimezone: Scalars['String']['output'];
+  externalJobRequisitionId: Scalars['String']['output'];
+  hierarchyId: Scalars['String']['output'];
+  interviewAddress?: Maybe<Scalars['String']['output']>;
+  interviewAttachmentsForCandidate: Array<LiInterviewAttachmentEntity>;
+  interviewAttachmentsForInterviewer: Array<LiInterviewAttachmentEntity>;
+  interviewDisplayName: Scalars['String']['output'];
+  interviewEventDuration: LiInterviewEventDurationEntity;
+  interviewLink?: Maybe<Scalars['String']['output']>;
+  /** IN_PERSON || ONLINE || PHONE */
+  interviewMode: Scalars['String']['output'];
+  interviewNotesForCandidate: Scalars['String']['output'];
+  interviewNotesForInterviewer: Scalars['String']['output'];
+  /** INDIVIDUAL || GROUP */
+  interviewType: Scalars['String']['output'];
+  interviewUniqueName: Scalars['String']['output'];
+  interviewers: Array<LiInterviewScheduleCardDetailInterviewerEntity>;
+  jobRequisitionId: Scalars['String']['output'];
+  /** INITIALIZED || COMPLETED */
+  objectStatus: Scalars['String']['output'];
+  organizationId: Scalars['String']['output'];
+  /** NOT_SCHEDULED || PENDING_CANDIDATES_CONFIRMATION || PENDING_INTERVIEWERS_CONFIRMATION || CONFIRMED */
+  status: Scalars['String']['output'];
+  tags: Array<LiTagEntity>;
+  timeslots: Array<LiInterviewScheduleCardDetailTimeslotEntity>;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type LiInterviewScheduleCardDetailInterviewerEntity = {
+  __typename?: 'LIInterviewScheduleCardDetailInterviewerEntity';
+  /** the id of interviewer */
+  _id?: Maybe<Scalars['String']['output']>;
+  email: Scalars['String']['output'];
+  firstName: Scalars['String']['output'];
+  lastName: Scalars['String']['output'];
+  phoneNumber?: Maybe<Scalars['String']['output']>;
+};
+
+export type LiInterviewScheduleCardDetailTimeslotEntity = {
+  __typename?: 'LIInterviewScheduleCardDetailTimeslotEntity';
+  _id?: Maybe<Scalars['String']['output']>;
+  end: Scalars['DateTime']['output'];
+  start: Scalars['DateTime']['output'];
+  status?: Maybe<Scalars['String']['output']>;
+};
+
 export type LiInterviewScheduleEntity = {
   __typename?: 'LIInterviewScheduleEntity';
   _id: Scalars['ID']['output'];
@@ -5642,6 +5734,7 @@ export type LiInterviewScheduleEntity = {
   /** IN_PERSON || ONLINE || PHONE */
   interviewMode: Scalars['String']['output'];
   interviewNotesForCandidate: Scalars['String']['output'];
+  interviewStage: Scalars['String']['output'];
   /** INDIVIDUAL || GROUP */
   interviewType: Scalars['String']['output'];
   interviewUniqueName: Scalars['String']['output'];
@@ -5761,6 +5854,25 @@ export type LiRecalculateJobRequisitionStatusDto = {
   hierarchyId?: InputMaybe<Scalars['String']['input']>;
   jobRequisitionId: Scalars['String']['input'];
   organizationId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type LiRescheduleCandidateInterviewDto = {
+  candidateTimezone?: InputMaybe<Scalars['String']['input']>;
+  shortcode: Scalars['String']['input'];
+  /** The id if timeslot */
+  timeslotId: Scalars['String']['input'];
+};
+
+export type LiRescheduledCandidateInterviewEntity = {
+  __typename?: 'LIRescheduledCandidateInterviewEntity';
+  iCalId: Scalars['String']['output'];
+  interviewEndsAt: Scalars['DateTime']['output'];
+  interviewLink?: Maybe<Scalars['String']['output']>;
+  interviewLocation?: Maybe<Scalars['String']['output']>;
+  interviewStartsAt: Scalars['DateTime']['output'];
+  interviewType: Scalars['String']['output'];
+  jobRequisitionName: Scalars['String']['output'];
+  timezone: Scalars['String']['output'];
 };
 
 export type Lis3PreSignedDownloadUrlEntity = {
@@ -6080,6 +6192,7 @@ export type Mutation = {
   LICreateJobRequisition: LiJobRequisitionEntity;
   LICreateScheduler: LiSchedulerEntity;
   LICreateTimeslot: LiTimeslotEntity;
+  LIGenerateEventICalInfo: LiGeneratedEventICalEntity;
   /** Generate S3 pre-signed URL for downloading file */
   LIGenerateS3PreSignedDownloadUrl: Lis3PreSignedDownloadUrlEntity;
   /** Generate S3 pre-signed URL for uploading file */
@@ -6097,6 +6210,8 @@ export type Mutation = {
   LIRecalculateInterviewScheduleStatus?: Maybe<Scalars['String']['output']>;
   /** recalculate job requisition status by job requisition id,       this one should be called only from orchestrator to utilize the retry mechanism.       if success, it will return job requisition id,       if failed it will throw sapia exception */
   LIRecalculateJobRequisitionStatus?: Maybe<Scalars['String']['output']>;
+  /** Update Candidate Interview Schedule Booking */
+  LIRescheduleCandidateInterview: LiRescheduledCandidateInterviewEntity;
   /** Sync a single application with candidate from APPS service to LI service. Application will be returned. */
   LISyncApplicationAndCandidateFromApps: LiApplicationEntity;
   /** Update job requisition by organizationId and jobRequisitionId or externalJobRequisitionId or shortcode. For managers field, it replaces the entire managers list with the passed in managers. For tags field, it appends the new tags to the existing tags. For other fields, it updates the existing fields. */
@@ -6104,6 +6219,7 @@ export type Mutation = {
   NotifCancelDataExportRequest?: Maybe<NotifNotificationEntity>;
   NotifCreateDataExportNotification: NotifNotificationEntity;
   NotifCreateEmailDomain: NotifCreateEmailDomainEntity;
+  NotifCreateNotificationTemplate: NotificationTemplateWithSetting;
   NotifDeleteNotificationSettings?: Maybe<Scalars['String']['output']>;
   NotifDownloadDataExportFile?: Maybe<NotifDownloadDataExportFileEntity>;
   /** Create a default template by copy the DEFAULT notification settings, if already have one, will do nothing. */
@@ -6914,6 +7030,11 @@ export type MutationLiCreateTimeslotArgs = {
 };
 
 
+export type MutationLiGenerateEventICalInfoArgs = {
+  input: LiGenerateEventICalDto;
+};
+
+
 export type MutationLiGenerateS3PreSignedDownloadUrlArgs = {
   input: LiGenerateS3PreSignedDownloadUrlDto;
 };
@@ -6959,6 +7080,11 @@ export type MutationLiRecalculateJobRequisitionStatusArgs = {
 };
 
 
+export type MutationLiRescheduleCandidateInterviewArgs = {
+  input: LiRescheduleCandidateInterviewDto;
+};
+
+
 export type MutationLiSyncApplicationAndCandidateFromAppsArgs = {
   input: LiSyncApplicationAndCandidateFromAppsDto;
 };
@@ -6981,6 +7107,11 @@ export type MutationNotifCreateDataExportNotificationArgs = {
 
 export type MutationNotifCreateEmailDomainArgs = {
   createEmailDomainInput: NotifCreateEmailDomainDto;
+};
+
+
+export type MutationNotifCreateNotificationTemplateArgs = {
+  createNotificationTemplateInput: NotifCreateNotificationTemplateWithSettingDto;
 };
 
 
@@ -7435,6 +7566,22 @@ export type NotifCreateEmailDomainEntity = {
   sesEmailIdentity?: Maybe<NotifCreateSesEmailIdentityEntity>;
 };
 
+export type NotifCreateNotificationTemplateWithSettingDto = {
+  customerId: Scalars['String']['input'];
+  emailCss?: InputMaybe<Scalars['String']['input']>;
+  emailHtml?: InputMaybe<Scalars['String']['input']>;
+  hierarchyId: Scalars['String']['input'];
+  language: Scalars['String']['input'];
+  organizationId: Scalars['String']['input'];
+  smsBody?: InputMaybe<Scalars['String']['input']>;
+  subject: Scalars['String']['input'];
+  templateTagName: Scalars['String']['input'];
+  type: Scalars['String']['input'];
+  userEmail: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+  versionDescription?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type NotifCreateSesEmailIdentityEntity = {
   __typename?: 'NotifCreateSESEmailIdentityEntity';
   dkimAttributes?: Maybe<NotifSesDkimAttributes>;
@@ -7538,9 +7685,11 @@ export type NotifGetEmailEventByMailMessageIdDto = {
 export type NotifGetEmailEventsByCustomerIdDto = {
   customerId: Scalars['String']['input'];
   dateRange?: InputMaybe<NotifDateRange>;
+  eventType?: InputMaybe<Scalars['String']['input']>;
   hierarchyId?: InputMaybe<Scalars['String']['input']>;
   limitEq?: InputMaybe<Scalars['Float']['input']>;
   mailRecipient?: InputMaybe<Scalars['String']['input']>;
+  masterId?: InputMaybe<Scalars['String']['input']>;
   organizationId?: InputMaybe<Scalars['String']['input']>;
   skipEq?: InputMaybe<Scalars['Float']['input']>;
   sort?: InputMaybe<SortDto>;
@@ -7710,6 +7859,12 @@ export type NotifSmsEventList = {
   pagination: NotifPaginationResponse;
 };
 
+export type NotifTag = {
+  __typename?: 'NotifTag';
+  name: Scalars['String']['output'];
+  value: Scalars['String']['output'];
+};
+
 export type NotifUpdateDataExportNotificationStatusDto = {
   notificationId: Scalars['ID']['input'];
   status: Scalars['String']['input'];
@@ -7745,6 +7900,60 @@ export type NotificationSettingsEntity = {
   isSapiaCustomer: Scalars['Boolean']['output'];
   settings: Array<NotificationSettingItemEntity>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type NotificationTemplate = {
+  __typename?: 'NotificationTemplate';
+  _id: Scalars['ID']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  customerId: Scalars['String']['output'];
+  emailCss?: Maybe<Scalars['String']['output']>;
+  emailHtml?: Maybe<Scalars['String']['output']>;
+  exportedEmailHtml?: Maybe<Scalars['String']['output']>;
+  hierarchyId: Scalars['String']['output'];
+  isActive: Scalars['Boolean']['output'];
+  isLatest: Scalars['Boolean']['output'];
+  language: Scalars['String']['output'];
+  lastedUpdatedBy: NotificationTemplateLastedUpdatedBy;
+  masterId: Scalars['ID']['output'];
+  organizationId: Scalars['String']['output'];
+  provider?: Maybe<Scalars['String']['output']>;
+  smsBody?: Maybe<Scalars['String']['output']>;
+  subject: Scalars['String']['output'];
+  tags?: Maybe<Array<NotifTag>>;
+  templateArn: Scalars['String']['output'];
+  templateSettingId: Scalars['ID']['output'];
+  templateTagName: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  version: Scalars['Float']['output'];
+  versionDescription?: Maybe<Scalars['String']['output']>;
+};
+
+export type NotificationTemplateLastedUpdatedBy = {
+  __typename?: 'NotificationTemplateLastedUpdatedBy';
+  userEmail: Scalars['String']['output'];
+  userId: Scalars['String']['output'];
+};
+
+export type NotificationTemplateSetting = {
+  __typename?: 'NotificationTemplateSetting';
+  _id: Scalars['ID']['output'];
+  category: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  customerId: Scalars['String']['output'];
+  emailEnabled: Scalars['Boolean']['output'];
+  hierarchyId: Scalars['String']['output'];
+  organizationId: Scalars['String']['output'];
+  smsEnabled: Scalars['Boolean']['output'];
+  templateTagName: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type NotificationTemplateWithSetting = {
+  __typename?: 'NotificationTemplateWithSetting';
+  template: NotificationTemplate;
+  templateSetting: NotificationTemplateSetting;
 };
 
 export type OrgCreateApiUserDto = {
@@ -8589,6 +8798,8 @@ export type Query = {
   LIGenerateTimeslotsFromPrompt: Array<LiTimeslotResultEntity>;
   /** Get application detail by organizationId and applicationId or externalApplicationId */
   LIGetApplicationDetail?: Maybe<LiApplicationEntity>;
+  /** Get branding by shortcode */
+  LIGetBrandingByShortcode?: Maybe<LiCandidateScheduleLinkBrandingEntity>;
   /** Get candidate schedule link info by shortcode */
   LIGetCandidateScheduleLinkInfoByShortcode?: Maybe<LiCandidateScheduleLinkInfoEntity>;
   /** Get a list of hiring manager from a single job requisition by jobRequisitionId */
@@ -8597,6 +8808,7 @@ export type Query = {
   LIGetInterviewScheduleCardBasicInfoListWithoutPagination: Array<LiInterviewScheduleCardBasicInfoEntity>;
   /** Get all candidates without pagination for the interview schedule card, application and job requisition must exist. */
   LIGetInterviewScheduleCardCandidatesWithoutPagination: Array<LiInterviewScheduleCardCandidateEntity>;
+  LIGetInterviewScheduleCardDetail: LiInterviewScheduleCardDetailEntity;
   /** Get interview schedule detail by organizationId and interviewScheduleId or interviewUniqueName */
   LIGetInterviewScheduleDetail?: Maybe<LiInterviewScheduleEntity>;
   /** Get job requisition detail by organizationId, jobRequisitionId or externalJobRequisitionId */
@@ -8660,6 +8872,7 @@ export type Query = {
   TIMe?: Maybe<TiAuth>;
   TIRefreshToken: TiAuthCheckRes;
   TISITalentInsight: TisiTalentInsight;
+  dummyQueryForTesting: Scalars['Boolean']['output'];
 };
 
 
@@ -9104,6 +9317,11 @@ export type QueryLiGetApplicationDetailArgs = {
 };
 
 
+export type QueryLiGetBrandingByShortcodeArgs = {
+  filter: LiGetBrandingByShortcodeDto;
+};
+
+
 export type QueryLiGetCandidateScheduleLinkInfoByShortcodeArgs = {
   filter: LiGetCandidateScheduleLinkInfoByShortcodeDto;
 };
@@ -9121,6 +9339,11 @@ export type QueryLiGetInterviewScheduleCardBasicInfoListWithoutPaginationArgs = 
 
 export type QueryLiGetInterviewScheduleCardCandidatesWithoutPaginationArgs = {
   filter: LiGetInterviewScheduleCardCandidatesWithoutPaginationDto;
+};
+
+
+export type QueryLiGetInterviewScheduleCardDetailArgs = {
+  filter: LiGetInterviewScheduleCardDetailDto;
 };
 
 
@@ -10094,6 +10317,13 @@ export type LiCancelCandidateInterviewMutationVariables = Exact<{
 
 export type LiCancelCandidateInterviewMutation = { __typename?: 'Mutation', LICancelCandidateInterview: { __typename?: 'LICancelledCandidateInterviewEntity', interviewEventId: string, interviewScheduleId: string, interviewUniqueName: string, interviewDisplayName: string, interviewType: string, interviewMode: string, status: string } };
 
+export type LiGetBrandingByShortcodeQueryVariables = Exact<{
+  filter: LiGetBrandingByShortcodeDto;
+}>;
+
+
+export type LiGetBrandingByShortcodeQuery = { __typename?: 'Query', LIGetBrandingByShortcode?: { __typename?: 'LICandidateScheduleLinkBrandingEntity', logoUrl?: string | null } | null };
+
 export type LiGetCandidateScheduleLinkInfoByShortcodeQueryVariables = Exact<{
   filter: LiGetCandidateScheduleLinkInfoByShortcodeDto;
 }>;
@@ -10104,4 +10334,5 @@ export type LiGetCandidateScheduleLinkInfoByShortcodeQuery = { __typename?: 'Que
 
 export const LiBookCandidateInterviewDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"LIBookCandidateInterview"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LIBookCandidateInterviewDto"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"LIBookCandidateInterview"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"jobRequisitionName"}},{"kind":"Field","name":{"kind":"Name","value":"interviewType"}},{"kind":"Field","name":{"kind":"Name","value":"interviewLocation"}},{"kind":"Field","name":{"kind":"Name","value":"interviewLink"}},{"kind":"Field","name":{"kind":"Name","value":"timezone"}},{"kind":"Field","name":{"kind":"Name","value":"interviewStartsAt"}},{"kind":"Field","name":{"kind":"Name","value":"interviewEndsAt"}},{"kind":"Field","name":{"kind":"Name","value":"iCalId"}}]}}]}}]} as unknown as DocumentNode<LiBookCandidateInterviewMutation, LiBookCandidateInterviewMutationVariables>;
 export const LiCancelCandidateInterviewDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"LICancelCandidateInterview"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LICancelCandidateInterviewDto"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"LICancelCandidateInterview"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"interviewEventId"}},{"kind":"Field","name":{"kind":"Name","value":"interviewScheduleId"}},{"kind":"Field","name":{"kind":"Name","value":"interviewUniqueName"}},{"kind":"Field","name":{"kind":"Name","value":"interviewDisplayName"}},{"kind":"Field","name":{"kind":"Name","value":"interviewType"}},{"kind":"Field","name":{"kind":"Name","value":"interviewMode"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<LiCancelCandidateInterviewMutation, LiCancelCandidateInterviewMutationVariables>;
+export const LiGetBrandingByShortcodeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"LIGetBrandingByShortcode"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LIGetBrandingByShortcodeDto"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"LIGetBrandingByShortcode"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"logoUrl"}}]}}]}}]} as unknown as DocumentNode<LiGetBrandingByShortcodeQuery, LiGetBrandingByShortcodeQueryVariables>;
 export const LiGetCandidateScheduleLinkInfoByShortcodeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"LIGetCandidateScheduleLinkInfoByShortcode"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LIGetCandidateScheduleLinkInfoByShortcodeDto"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"LIGetCandidateScheduleLinkInfoByShortcode"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"jobRequisitionName"}},{"kind":"Field","name":{"kind":"Name","value":"candidateTimezone"}},{"kind":"Field","name":{"kind":"Name","value":"shortcode"}},{"kind":"Field","name":{"kind":"Name","value":"candidateScheduleStatus"}},{"kind":"Field","name":{"kind":"Name","value":"timeslots"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"_id"}},{"kind":"Field","name":{"kind":"Name","value":"start"}},{"kind":"Field","name":{"kind":"Name","value":"end"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"Field","name":{"kind":"Name","value":"interviewSchedule"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"defaultTimezone"}},{"kind":"Field","name":{"kind":"Name","value":"interviewUniqueName"}},{"kind":"Field","name":{"kind":"Name","value":"interviewDisplayName"}},{"kind":"Field","name":{"kind":"Name","value":"interviewType"}},{"kind":"Field","name":{"kind":"Name","value":"interviewMode"}},{"kind":"Field","name":{"kind":"Name","value":"interviewAddress"}},{"kind":"Field","name":{"kind":"Name","value":"interviewLink"}},{"kind":"Field","name":{"kind":"Name","value":"interviewEventDuration"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"unit"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"interviewNotesForCandidate"}},{"kind":"Field","name":{"kind":"Name","value":"interviewAttachments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fileId"}},{"kind":"Field","name":{"kind":"Name","value":"fileUrl"}},{"kind":"Field","name":{"kind":"Name","value":"mimeType"}},{"kind":"Field","name":{"kind":"Name","value":"filename"}}]}},{"kind":"Field","name":{"kind":"Name","value":"interviewScheduleStatus"}}]}},{"kind":"Field","name":{"kind":"Name","value":"interviewEvent"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"interviewStartsAt"}},{"kind":"Field","name":{"kind":"Name","value":"interviewEndsAt"}},{"kind":"Field","name":{"kind":"Name","value":"iCalId"}},{"kind":"Field","name":{"kind":"Name","value":"interviewStatus"}}]}}]}}]}}]} as unknown as DocumentNode<LiGetCandidateScheduleLinkInfoByShortcodeQuery, LiGetCandidateScheduleLinkInfoByShortcodeQueryVariables>;

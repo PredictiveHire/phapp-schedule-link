@@ -58,6 +58,6 @@ npm run schema:publish:local
 - Run [phapi-gateway-graphql](https://github.com/PredictiveHire/phapi-gateway-graphql) locally
 - Generate new schema from Schedule Link App
 ```bash
-# run codegen in talent hub repo
+# run codegen in scheduler-link repo
 pnpm codegen
 ```

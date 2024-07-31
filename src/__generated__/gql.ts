@@ -15,6 +15,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n  mutation LIBookCandidateInterview($input: LIBookCandidateInterviewDto!) {\n    LIBookCandidateInterview(input: $input) {\n      jobRequisitionName\n      interviewType\n      interviewLocation\n      interviewLink\n      timezone\n      interviewStartsAt\n      interviewEndsAt\n      iCalId\n    }\n  }\n": types.LiBookCandidateInterviewDocument,
     "\n  mutation LICancelCandidateInterview($input: LICancelCandidateInterviewDto!) {\n    LICancelCandidateInterview(input: $input) {\n      interviewEventId\n      interviewScheduleId\n      interviewUniqueName\n      interviewDisplayName\n      interviewType\n      interviewMode\n      status\n    }\n  }\n": types.LiCancelCandidateInterviewDocument,
+    "\n  query LIGetBrandingByShortcode($filter: LIGetBrandingByShortcodeDto!) {\n    LIGetBrandingByShortcode(filter: $filter) {\n      logoUrl\n    }\n  }\n": types.LiGetBrandingByShortcodeDocument,
     "\n  query LIGetCandidateScheduleLinkInfoByShortcode($filter: LIGetCandidateScheduleLinkInfoByShortcodeDto!) {\n    LIGetCandidateScheduleLinkInfoByShortcode(filter: $filter) {\n      jobRequisitionName\n      candidateTimezone\n      shortcode\n      candidateScheduleStatus\n      timeslots {\n        _id\n        start\n        end\n        status\n      }\n      interviewSchedule {\n        defaultTimezone\n        interviewUniqueName\n        interviewDisplayName\n        interviewType\n        interviewMode\n        interviewAddress\n        interviewLink\n        interviewEventDuration {\n          type\n          unit\n          value\n        }\n        interviewNotesForCandidate\n        interviewAttachments {\n          fileId\n          fileUrl\n          mimeType\n          filename\n        }\n        interviewScheduleStatus\n      }\n      interviewEvent {\n        interviewStartsAt\n        interviewEndsAt\n        iCalId\n        interviewStatus\n      }\n    }\n  }\n": types.LiGetCandidateScheduleLinkInfoByShortcodeDocument,
 };
 
@@ -40,6 +41,10 @@ export function graphql(source: "\n  mutation LIBookCandidateInterview($input: L
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation LICancelCandidateInterview($input: LICancelCandidateInterviewDto!) {\n    LICancelCandidateInterview(input: $input) {\n      interviewEventId\n      interviewScheduleId\n      interviewUniqueName\n      interviewDisplayName\n      interviewType\n      interviewMode\n      status\n    }\n  }\n"): (typeof documents)["\n  mutation LICancelCandidateInterview($input: LICancelCandidateInterviewDto!) {\n    LICancelCandidateInterview(input: $input) {\n      interviewEventId\n      interviewScheduleId\n      interviewUniqueName\n      interviewDisplayName\n      interviewType\n      interviewMode\n      status\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query LIGetBrandingByShortcode($filter: LIGetBrandingByShortcodeDto!) {\n    LIGetBrandingByShortcode(filter: $filter) {\n      logoUrl\n    }\n  }\n"): (typeof documents)["\n  query LIGetBrandingByShortcode($filter: LIGetBrandingByShortcodeDto!) {\n    LIGetBrandingByShortcode(filter: $filter) {\n      logoUrl\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -1,7 +1,6 @@
 import type { ReactNode } from "react"
 import React, { createContext, useEffect, useState } from "react"
 
-import logoSvg from "@/assets/images/ww-logo.svg"
 import { ScheduleLinkLoading } from "@/components/ScheduleLinkLoading"
 import { LICandidateInterviewScheduleStatus, LIInterviewMode } from "@/pages/schedule-interview/constants"
 import {
@@ -9,6 +8,7 @@ import {
   ScheduleInterviewContextType,
 } from "@/pages/schedule-interview/type/scheduleInterviewContext"
 
+import { useGetBrandingByShortcode } from "../hooks/useGetBrandingByShortcode"
 import { useGetCandidateScheduleLinkInfoByShortcode } from "../hooks/useGetCandidateScheduleLinkInfoByShortcode"
 import { InterviewTimeSlot } from "../type"
 import { LiCandidateScheduleLinkInfo } from "../type/getCandidateScheduleLinkByShortcode"
@@ -21,60 +21,73 @@ export const ScheduleInterviewProvider: React.FC<{ children: ReactNode }> = ({ c
     LICandidateInterviewScheduleStatus.PENDING
   )
   const [interviewDates, setInterviewDates] = useState<InterviewTimeSlot[]>([])
+  const [logo, setLogo] = useState("")
   const [isDataUpdated, setIsDataUpdated] = useState(false)
 
   const { candidateScheduleLinkInfo, isLoadingCandidateScheduleLinkInfo, getCandidateScheduleLinkInfoError } =
     useGetCandidateScheduleLinkInfoByShortcode()
+  const { candidateScheduleLinkBranding, isLoadingCandidateScheduleLinkBranding } = useGetBrandingByShortcode()
 
   useEffect(() => {
-    if (!isLoadingCandidateScheduleLinkInfo) {
-      if (!getCandidateScheduleLinkInfoError && candidateScheduleLinkInfo) {
-        const {
-          jobRequisitionName,
-          candidateTimezone,
-          candidateScheduleStatus,
-          timeslots,
-          interviewSchedule,
-          interviewEvent,
-        } = candidateScheduleLinkInfo as LiCandidateScheduleLinkInfo
-        const { interviewMode, interviewLink, interviewAddress } = interviewSchedule
+    if (!isLoadingCandidateScheduleLinkInfo && !getCandidateScheduleLinkInfoError && candidateScheduleLinkInfo) {
+      const {
+        jobRequisitionName,
+        candidateTimezone,
+        candidateScheduleStatus,
+        timeslots,
+        interviewSchedule,
+        interviewEvent,
+      } = candidateScheduleLinkInfo as LiCandidateScheduleLinkInfo
+      const { interviewMode, interviewLink, interviewAddress } = interviewSchedule
 
-        const formattedInterviewDates = timeslots.map((timeslot) => ({
-          start: timeslot.start,
-          end: timeslot.end,
-          timeslotId: timeslot._id,
-        }))
+      const formattedInterviewDates = timeslots.map((timeslot) => ({
+        start: timeslot.start,
+        end: timeslot.end,
+        timeslotId: timeslot._id,
+      }))
 
-        // TODO: replace timeSlotId from interviewEvent
-        const selectedTimeSlotId = "110000000000000000000005"
-        setInterviewDates(formattedInterviewDates)
+      // TODO: replace timeSlotId from interviewEvent
+      const selectedTimeSlotId = "110000000000000000000005"
+      setInterviewDates(formattedInterviewDates)
 
-        setInterviewInfo({
-          jobRequisitionName: jobRequisitionName ?? "",
-          timezone: candidateTimezone,
-          interviewMode: interviewMode ?? LIInterviewMode.IN_PERSON,
-          interviewLink: interviewLink ?? "",
-          interviewAddress: interviewAddress ?? "",
-          interviewStartsAt: interviewEvent?.interviewStartsAt ?? "",
-          interviewEndsAt: interviewEvent?.interviewEndsAt ?? "",
-          iCalId: interviewEvent?.iCalId ?? "",
-          selectedTimeSlotId: (interviewEvent && selectedTimeSlotId) ?? "",
-        })
+      setInterviewInfo({
+        jobRequisitionName: jobRequisitionName ?? "",
+        timezone: candidateTimezone,
+        interviewMode: interviewMode ?? LIInterviewMode.IN_PERSON,
+        interviewLink: interviewLink ?? "",
+        interviewAddress: interviewAddress ?? "",
+        interviewStartsAt: interviewEvent?.interviewStartsAt ?? "",
+        interviewEndsAt: interviewEvent?.interviewEndsAt ?? "",
+        iCalId: interviewEvent?.iCalId ?? "",
+        selectedTimeSlotId: (interviewEvent && selectedTimeSlotId) ?? "",
+      })
 
-        setCandidateInterviewScheduleStatus(candidateScheduleStatus)
-      }
+      setCandidateInterviewScheduleStatus(candidateScheduleStatus)
+    }
+
+    if (!isLoadingCandidateScheduleLinkBranding) {
+      setLogo(candidateScheduleLinkBranding?.logoUrl ?? "")
+    }
+
+    if (!isLoadingCandidateScheduleLinkInfo && !isLoadingCandidateScheduleLinkBranding) {
       setIsDataUpdated(true)
     }
-  }, [isLoadingCandidateScheduleLinkInfo, getCandidateScheduleLinkInfoError, candidateScheduleLinkInfo])
+  }, [
+    isLoadingCandidateScheduleLinkInfo,
+    isLoadingCandidateScheduleLinkBranding,
+    getCandidateScheduleLinkInfoError,
+    candidateScheduleLinkInfo,
+    candidateScheduleLinkBranding,
+  ])
 
-  if (isLoadingCandidateScheduleLinkInfo || !isDataUpdated) {
+  if (isLoadingCandidateScheduleLinkInfo || isLoadingCandidateScheduleLinkBranding || !isDataUpdated) {
     return <ScheduleLinkLoading />
   }
 
   return (
     <ScheduleInterviewContext.Provider
       value={{
-        logo: logoSvg,
+        logo,
         candidateInterviewScheduleStatus,
         updateCandidateInterviewScheduleStatus: setCandidateInterviewScheduleStatus,
         interviewDates,
