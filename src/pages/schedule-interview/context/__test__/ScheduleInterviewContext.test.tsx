@@ -3,15 +3,17 @@ import React from "react"
 
 import { LICandidateInterviewScheduleStatus, LIInterviewMode } from "@/pages/schedule-interview/constants"
 
+import { useGetBrandingByShortcode } from "../../hooks/useGetBrandingByShortcode"
 import { useGetCandidateScheduleLinkInfoByShortcode } from "../../hooks/useGetCandidateScheduleLinkInfoByShortcode"
 import { ScheduleInterviewContext, ScheduleInterviewProvider } from "../ScheduleInterviewContext"
 
 // Mock the hook used inside the provider
 jest.mock("../../hooks/useGetCandidateScheduleLinkInfoByShortcode")
+jest.mock("../../hooks/useGetBrandingByShortcode")
 
 describe("ScheduleInterviewProvider", () => {
   const mockUseGetCandidateScheduleLinkInfoByShortcode = useGetCandidateScheduleLinkInfoByShortcode as jest.Mock
-
+  const mockUseGetBrandingByShortcode = useGetBrandingByShortcode as jest.Mock
   const mockCandidateScheduleLinkInfo = {
     candidateTimezone: "America/New_York",
     candidateScheduleStatus: LICandidateInterviewScheduleStatus.CONFIRMED,
@@ -37,17 +39,36 @@ describe("ScheduleInterviewProvider", () => {
       isLoadingCandidateScheduleLinkInfo: false,
       getCandidateScheduleLinkInfoError: null,
     })
+    mockUseGetBrandingByShortcode.mockReturnValue({
+      candidateScheduleLinkBranding: { logoUrl: "https://example.com/logo.png" },
+      isLoadingCandidateScheduleLinkBranding: false,
+    })
   })
 
   afterEach(() => {
     jest.resetAllMocks()
   })
 
-  it("should renders loading component when data is being fetched", () => {
-    mockUseGetCandidateScheduleLinkInfoByShortcode.mockReturnValueOnce({
+  it("should renders loading component when schedule link info is being fetched", () => {
+    mockUseGetCandidateScheduleLinkInfoByShortcode.mockReturnValue({
       candidateScheduleLinkInfo: null,
       isLoadingCandidateScheduleLinkInfo: true,
       getCandidateScheduleLinkInfoError: null,
+    })
+
+    render(
+      <ScheduleInterviewProvider>
+        <div>Test Child</div>
+      </ScheduleInterviewProvider>
+    )
+
+    expect(screen.getByTestId("loading")).toBeInTheDocument()
+  })
+
+  it("should renders loading component when branding is being fetched", () => {
+    mockUseGetBrandingByShortcode.mockReturnValue({
+      candidateScheduleLinkBranding: null,
+      isLoadingCandidateScheduleLinkBranding: true,
     })
 
     render(
@@ -65,6 +86,7 @@ describe("ScheduleInterviewProvider", () => {
         <ScheduleInterviewContext.Consumer>
           {(context) => (
             <div>
+              <div>Logo: {context.logo}</div>
               <div>Candidate Status: {context.candidateInterviewScheduleStatus}</div>
               <div>Interview Mode: {context.interviewInfo?.interviewMode}</div>
               <div>Timezone: {context.interviewInfo?.timezone}</div>
@@ -75,6 +97,7 @@ describe("ScheduleInterviewProvider", () => {
     )
 
     await waitFor(() => {
+      expect(screen.getByText(/Logo:/i)).toBeInTheDocument()
       expect(screen.getByText(/Candidate Status: CONFIRMED/i)).toBeInTheDocument()
       expect(screen.getByText(/Interview Mode: ONLINE/i)).toBeInTheDocument()
       expect(screen.getByText(/Timezone: America\/New_York/i)).toBeInTheDocument()
