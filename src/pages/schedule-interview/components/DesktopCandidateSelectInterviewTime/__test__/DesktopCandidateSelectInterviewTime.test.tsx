@@ -1,6 +1,7 @@
 import { MockedProvider } from "@apollo/client/testing"
 import { render, screen } from "@testing-library/react"
 import React from "react"
+import { MemoryRouter } from "react-router-dom"
 
 import { useScheduleInterview } from "@/pages/schedule-interview/hooks/useScheduleInterview"
 import { mockBookCandidateInterview } from "@/pages/schedule-interview/mock/mockBookCandidateInterview"
@@ -10,12 +11,15 @@ import { DesktopCandidateSelectInterviewTime } from "../DesktopCandidateSelectIn
 
 // Mock the useScheduleInterview hook
 jest.mock("@/pages/schedule-interview/hooks/useScheduleInterview")
+jest.mock("@rollbar/react")
 const mockedUseScheduleInterview = useScheduleInterview as jest.MockedFunction<typeof useScheduleInterview>
 
 const renderComponent = () => {
   return render(
     <MockedProvider mocks={mockBookCandidateInterview} addTypename={false}>
-      <DesktopCandidateSelectInterviewTime />
+      <MemoryRouter>
+        <DesktopCandidateSelectInterviewTime />
+      </MemoryRouter>
     </MockedProvider>
   )
 }

@@ -2,22 +2,26 @@ import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import dayjs from "dayjs"
 import React from "react"
+import { MemoryRouter } from "react-router-dom"
 
 import { DATE_FORMAT } from "@/pages/schedule-interview/constants"
 import { useBookInterviewNow } from "@/pages/schedule-interview/hooks/useBookInterviewNow"
 import { useFormatTimeSlots } from "@/pages/schedule-interview/hooks/useFormatTimeSlots"
 import { useInterviewDate } from "@/pages/schedule-interview/hooks/useInterviewDate"
+import { useRescheduleCandidateInterview } from "@/pages/schedule-interview/hooks/useRescheduleCandidateInterview"
 import { useSelectTimeSlot } from "@/pages/schedule-interview/hooks/useSelectTimeSlot"
 import { formatDateToLongString } from "@/utils/dateTime"
 
 import { DesktopInterviewTimeSlotBooking } from "../DesktopInterviewTimeSlotBooking"
 
 // Mock the hooks
+jest.mock("@/pages/schedule-interview/hooks/useRescheduleCandidateInterview")
 jest.mock("@/pages/schedule-interview/hooks/useFormatTimeSlots")
 jest.mock("@/utils/dateTime")
 jest.mock("@/pages/schedule-interview/hooks/useSelectTimeSlot")
 jest.mock("@/pages/schedule-interview/hooks/useBookInterviewNow")
 jest.mock("@/pages/schedule-interview/hooks/useInterviewDate")
+jest.mock("@rollbar/react")
 
 const mockUserSelectTimeSlotValue = {
   selectedTimeSlotId: "1",
@@ -46,11 +50,26 @@ const mockUseInterviewDateValue = {
   setInterviewDate: jest.fn(),
 }
 
+const mockUseRescheduleCandidateInterview = (
+  useRescheduleCandidateInterview as jest.MockedFunction<typeof useRescheduleCandidateInterview>
+).mockReturnValue({
+  isRescheduleCandidateInterviewLoading: false,
+  rescheduleCandidateInterview: jest.fn(),
+})
+
 const mockUseFormatTimeSlots = useFormatTimeSlots as jest.MockedFunction<typeof useFormatTimeSlots>
 const mockFormatDateToLongString = formatDateToLongString as jest.MockedFunction<typeof formatDateToLongString>
 const mockUseSelectTimeSlot = useSelectTimeSlot as jest.MockedFunction<typeof useSelectTimeSlot>
 const mockUseBookInterviewNow = useBookInterviewNow as jest.MockedFunction<typeof useBookInterviewNow>
 const mockUseInterviewDate = useInterviewDate as jest.MockedFunction<typeof useInterviewDate>
+
+const renderComponent = () => {
+  return render(
+    <MemoryRouter>
+      <DesktopInterviewTimeSlotBooking />
+    </MemoryRouter>
+  )
+}
 
 describe("DesktopInterviewTimeSlotBooking", () => {
   beforeEach(() => {
@@ -79,7 +98,7 @@ describe("DesktopInterviewTimeSlotBooking", () => {
   })
 
   it("should render the component correctly", () => {
-    render(<DesktopInterviewTimeSlotBooking />)
+    renderComponent()
 
     expect(screen.getByTestId("desktop-interview-time-slot-booking")).toBeInTheDocument()
     expect(screen.getByText(/Timezone:/)).toBeInTheDocument()
@@ -87,7 +106,7 @@ describe("DesktopInterviewTimeSlotBooking", () => {
   })
 
   it("should render the calendar header correctly", () => {
-    render(<DesktopInterviewTimeSlotBooking />)
+    renderComponent()
 
     expect(screen.getByText("June 2024")).toBeInTheDocument()
     expect(screen.getByRole("img", { name: /left/i })).toBeInTheDocument()
@@ -96,7 +115,7 @@ describe("DesktopInterviewTimeSlotBooking", () => {
 
   it("should handle calendar navigation", async () => {
     const user = userEvent.setup()
-    render(<DesktopInterviewTimeSlotBooking />)
+    renderComponent()
 
     await user.click(screen.getByRole("img", { name: /left/i }))
     await user.click(screen.getByRole("img", { name: /right/i }))
@@ -112,7 +131,7 @@ describe("DesktopInterviewTimeSlotBooking", () => {
       handleDateChange,
     })
 
-    render(<DesktopInterviewTimeSlotBooking />)
+    renderComponent()
     const dateTestId = dayjs("June 13, 2024").format(DATE_FORMAT)
     const dateCell = screen.getByTestId(dateTestId)
     await user.click(dateCell)
@@ -122,7 +141,7 @@ describe("DesktopInterviewTimeSlotBooking", () => {
 
   it("should render and handle time slots correctly", async () => {
     const user = userEvent.setup()
-    render(<DesktopInterviewTimeSlotBooking />)
+    renderComponent()
 
     expect(screen.getByText("09:00 AM - 10:00 AM")).toBeInTheDocument()
     expect(screen.getByText("10:00 AM - 11:00 AM")).toBeInTheDocument()
@@ -139,7 +158,7 @@ describe("DesktopInterviewTimeSlotBooking", () => {
 
   it("should handle booking interview now button click", async () => {
     const user = userEvent.setup()
-    render(<DesktopInterviewTimeSlotBooking />)
+    renderComponent()
 
     const button = screen.getByText("Book interview now")
     await user.click(button)

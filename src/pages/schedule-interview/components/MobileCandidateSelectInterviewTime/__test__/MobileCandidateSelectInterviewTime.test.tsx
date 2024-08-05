@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import dayjs from "dayjs"
 import React from "react"
+import { MemoryRouter } from "react-router-dom"
 
 import { LICandidateInterviewScheduleStatus } from "@/pages/schedule-interview/constants"
 import { useScheduleInterview } from "@/pages/schedule-interview/hooks/useScheduleInterview"
@@ -13,12 +14,16 @@ import { MobileCandidateSelectInterviewTime } from "../MobileCandidateSelectInte
 
 // Mock the useScheduleInterview hook
 jest.mock("@/pages/schedule-interview/hooks/useScheduleInterview")
+jest.mock("@rollbar/react")
+
 const mockedUseScheduleInterview = useScheduleInterview as jest.MockedFunction<typeof useScheduleInterview>
 
 const renderComponent = () => {
   return render(
     <MockedProvider mocks={mockBookCandidateInterview} addTypename={false}>
-      <MobileCandidateSelectInterviewTime />
+      <MemoryRouter>
+        <MobileCandidateSelectInterviewTime />
+      </MemoryRouter>
     </MockedProvider>
   )
 }

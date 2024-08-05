@@ -2,20 +2,24 @@ import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { Dayjs } from "dayjs"
 import React from "react"
+import { MemoryRouter } from "react-router-dom"
 
 import { useInterviewDateChange } from "@/pages/schedule-interview/components/MobileCandidateSelectInterviewTime/hooks/useInterviewDateChange"
 import { useBookInterviewNow } from "@/pages/schedule-interview/hooks/useBookInterviewNow"
 import { useFormatTimeSlots } from "@/pages/schedule-interview/hooks/useFormatTimeSlots"
+import { useRescheduleCandidateInterview } from "@/pages/schedule-interview/hooks/useRescheduleCandidateInterview"
 import { useSelectTimeSlot } from "@/pages/schedule-interview/hooks/useSelectTimeSlot"
 import { formatDateToLongString } from "@/utils/dateTime"
 
 import { InterviewTimeSlotBookingProps, MobileInterviewTimeSlotBooking } from "../MobileInterviewTimeSlotBooking"
 
+jest.mock("@/pages/schedule-interview/hooks/useRescheduleCandidateInterview")
 jest.mock("@/pages/schedule-interview/components/MobileCandidateSelectInterviewTime/hooks/useInterviewDateChange")
 jest.mock("@/pages/schedule-interview/hooks/useFormatTimeSlots")
 jest.mock("@/pages/schedule-interview/hooks/useSelectTimeSlot")
 jest.mock("@/pages/schedule-interview/hooks/useBookInterviewNow")
 jest.mock("@/utils/dateTime")
+jest.mock("@rollbar/react")
 
 const mockUseInterviewDateChangeValue = {
   currentDate: "2024-06-13",
@@ -35,6 +39,13 @@ const mockUseBookInterviewNowValue = {
   handleBookInterviewNow: jest.fn(),
 }
 
+const mockUseRescheduleCandidateInterview = (
+  useRescheduleCandidateInterview as jest.MockedFunction<typeof useRescheduleCandidateInterview>
+).mockReturnValue({
+  isRescheduleCandidateInterviewLoading: false,
+  rescheduleCandidateInterview: jest.fn(),
+})
+
 const mockUseInterviewDateChange = useInterviewDateChange as jest.MockedFunction<typeof useInterviewDateChange>
 const mockUseFormatTimeSlots = useFormatTimeSlots as jest.MockedFunction<typeof useFormatTimeSlots>
 const mockFormatDateToLongString = formatDateToLongString as jest.MockedFunction<typeof formatDateToLongString>
@@ -50,7 +61,11 @@ const renderComponent = (props: Partial<InterviewTimeSlotBookingProps> = {}) => 
     ],
     initialDate: {} as Dayjs,
   }
-  return render(<MobileInterviewTimeSlotBooking {...defaultProps} {...props} />)
+  return render(
+    <MemoryRouter>
+      <MobileInterviewTimeSlotBooking {...defaultProps} {...props} />
+    </MemoryRouter>
+  )
 }
 
 describe("MobileInterviewTimeSlotBooking", () => {

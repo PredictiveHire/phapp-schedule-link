@@ -10,7 +10,7 @@ import { useBookInterviewNow } from "@/pages/schedule-interview/hooks/useBookInt
 import { useCalendarHeader } from "@/pages/schedule-interview/hooks/useCalendarHeader"
 import { useFormatTimeSlots } from "@/pages/schedule-interview/hooks/useFormatTimeSlots"
 import { useInterviewDate } from "@/pages/schedule-interview/hooks/useInterviewDate"
-import { useRescheduleInterview } from "@/pages/schedule-interview/hooks/useRescheduleInterview"
+import { useRescheduleCandidateInterview } from "@/pages/schedule-interview/hooks/useRescheduleCandidateInterview"
 import { useSelectTimeSlot } from "@/pages/schedule-interview/hooks/useSelectTimeSlot"
 import { cn, isReschedulePage } from "@/utils"
 import { formatDateToLongString, formatDayjs } from "@/utils/dateTime"
@@ -21,18 +21,18 @@ interface IProps {
   defaultTimeSlotId?: string
 }
 
-const isReschedule = isReschedulePage()
-
 export const DesktopInterviewTimeSlotBooking = ({ defaultTimeSlotId }: IProps) => {
   const { selectedTimeSlotId, handleTimeSlotChange } = useSelectTimeSlot({
     defaultTimeSlotId,
   })
 
+  const isReschedule = isReschedulePage()
+
   const { initialInterviewDate, interviewDate, isInterviewDate, disabledDate, handleDateChange, interviewDates } =
     useInterviewDate()
 
   const { handleBookInterviewNow, isBookCandidateInterviewLoading } = useBookInterviewNow()
-  const { handleRescheduleInterview, isRescheduleInterviewLoading } = useRescheduleInterview()
+  const { rescheduleCandidateInterview, isRescheduleCandidateInterviewLoading } = useRescheduleCandidateInterview()
 
   const { formatTimeSlots } = useFormatTimeSlots()
   const currentDate = formatDayjs(interviewDate)
@@ -55,10 +55,14 @@ export const DesktopInterviewTimeSlotBooking = ({ defaultTimeSlotId }: IProps) =
   }
 
   const handleClickRescheduleInterview = () => {
-    handleRescheduleInterview({
-      timeslotId: selectedTimeSlotId || "",
-      shortcode: shortcode,
-      candidateTimezone: userTimezone,
+    void rescheduleCandidateInterview({
+      variables: {
+        input: {
+          timeslotId: selectedTimeSlotId || "",
+          shortcode: shortcode,
+          candidateTimezone: userTimezone,
+        },
+      },
     })
   }
 
@@ -133,7 +137,7 @@ export const DesktopInterviewTimeSlotBooking = ({ defaultTimeSlotId }: IProps) =
           ])}
           disabled={selectedTimeSlotId === defaultTimeSlotId}
           onClick={handleClickRescheduleInterview}
-          loading={isRescheduleInterviewLoading}
+          loading={isRescheduleCandidateInterviewLoading}
         >
           Reschedule interview
         </Button>

@@ -2,6 +2,7 @@ import { CalendarOutlined } from "@ant-design/icons"
 import { PHIcon } from "@ph/ui"
 import { Button, Grid, Space } from "antd"
 import React, { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 import { CandidateConfirmationInfo } from "@/pages/schedule-interview/components/CandidateConfirmation/CandidateConfirmationInfo"
 import { useCandidateCancelInterview } from "@/pages/schedule-interview/components/CandidateConfirmation/hooks/useCandidateCancelInterview"
@@ -17,7 +18,7 @@ const { useBreakpoint } = Grid
 
 export const CandidateConfirmation = () => {
   const [isCancelInterviewModalOpen, setIsCancelInterviewModalOpen] = useState(false)
-
+  const navigate = useNavigate()
   const { isCancelCandidateInterviewLoading, cancelCandidateInterview } = useCandidateCancelInterview()
   const { interviewInfo } = useScheduleInterview()
   const { generateEventICalInfo } = useGenerateEventICalInfo()
@@ -104,8 +105,15 @@ export const CandidateConfirmation = () => {
           >
             <span className="text-white">Add to calendar</span>
           </Button>
-
-          <Button aria-label="Reschedule Interview" className="!h-button !text-base !text-black" block shape="round">
+          <Button
+            aria-label="Reschedule Interview"
+            className="!h-button !text-base !text-black"
+            block
+            shape="round"
+            onClick={() => {
+              navigate("reschedule")
+            }}
+          >
             Reschedule Interview
           </Button>
           <Button

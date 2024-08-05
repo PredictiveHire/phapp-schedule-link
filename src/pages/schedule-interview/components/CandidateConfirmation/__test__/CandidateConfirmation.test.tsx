@@ -1,11 +1,13 @@
 import { act, render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import React from "react"
+import { MemoryRouter } from "react-router-dom"
 
 import { CandidateConfirmation } from "@/pages/schedule-interview/components/CandidateConfirmation"
 import { useCandidateCancelInterview } from "@/pages/schedule-interview/components/CandidateConfirmation/hooks/useCandidateCancelInterview"
 import { LIInterviewMode, LIInterviewModeLabel } from "@/pages/schedule-interview/constants"
 import { useGenerateEventICalInfo } from "@/pages/schedule-interview/hooks/useGenerateEventICalInfo"
+import { useRescheduleCandidateInterview } from "@/pages/schedule-interview/hooks/useRescheduleCandidateInterview"
 import { useScheduleInterview } from "@/pages/schedule-interview/hooks/useScheduleInterview"
 import {
   interviewInfo,
@@ -57,13 +59,25 @@ const mockUseGenerateEventICalInfo = (
   generateEventICalInfo: mockGenerateEventICalInfo,
 })
 
+jest.mock("@/pages/schedule-interview/hooks/useRescheduleCandidateInterview")
+const mockUseRescheduleCandidateInterview = (
+  useRescheduleCandidateInterview as jest.MockedFunction<typeof useRescheduleCandidateInterview>
+).mockReturnValue({
+  isRescheduleCandidateInterviewLoading: false,
+  rescheduleCandidateInterview: jest.fn(),
+})
+
 describe("CandidateConfirmation", () => {
   afterEach(() => {
     jest.clearAllMocks()
   })
 
   it("renders the component correctly", () => {
-    render(<CandidateConfirmation />)
+    render(
+      <MemoryRouter>
+        <CandidateConfirmation />
+      </MemoryRouter>
+    )
 
     expect(screen.getByText("Friday, June 14 09:00 AM")).toBeInTheDocument()
     expect(screen.getByText("10:00 AM")).toBeInTheDocument()
@@ -75,7 +89,11 @@ describe("CandidateConfirmation", () => {
   })
 
   it("displays the correct interview mode and location for in-person interview", () => {
-    render(<CandidateConfirmation />)
+    render(
+      <MemoryRouter>
+        <CandidateConfirmation />
+      </MemoryRouter>
+    )
     expect(screen.getByText("In person")).toBeInTheDocument()
     expect(screen.getByText(interviewInfo.interviewAddress)).toBeInTheDocument()
   })
@@ -91,13 +109,21 @@ describe("CandidateConfirmation", () => {
       },
     })
 
-    render(<CandidateConfirmation />)
+    render(
+      <MemoryRouter>
+        <CandidateConfirmation />
+      </MemoryRouter>
+    )
     expect(screen.getByText("Online")).toBeInTheDocument()
     expect(screen.getByText("https://example.com/interview")).toBeInTheDocument()
   })
 
   it("should render correct buttons", () => {
-    render(<CandidateConfirmation />)
+    render(
+      <MemoryRouter>
+        <CandidateConfirmation />
+      </MemoryRouter>
+    )
     const addToCalendarButton = screen.getByRole("button", { name: /Add to calendar/i })
     const cancelInterviewButton = screen.getByRole("button", { name: /Cancel interview/i })
     const rescheduleInterviewButton = screen.getByRole("button", { name: /Reschedule interview/i })
@@ -109,7 +135,11 @@ describe("CandidateConfirmation", () => {
 
   it("should open cancel interview modal when cancel interview button is clicked", async () => {
     const user = userEvent.setup()
-    render(<CandidateConfirmation />)
+    render(
+      <MemoryRouter>
+        <CandidateConfirmation />
+      </MemoryRouter>
+    )
     const cancelInterviewButton = screen.getByRole("button", { name: /cancel interview/i })
 
     await act(async () => {
@@ -136,7 +166,11 @@ describe("CandidateConfirmation", () => {
       generateEventICalInfo: mockGenerateEventICalInfo,
     })
 
-    const { getByRole } = render(<CandidateConfirmation />)
+    const { getByRole } = render(
+      <MemoryRouter>
+        <CandidateConfirmation />
+      </MemoryRouter>
+    )
     const addToCalendarButton = getByRole("button", {
       name: "Add to calendar",
     })
@@ -162,7 +196,11 @@ describe("CandidateConfirmation", () => {
       },
     })
 
-    const { getByRole } = render(<CandidateConfirmation />)
+    const { getByRole } = render(
+      <MemoryRouter>
+        <CandidateConfirmation />
+      </MemoryRouter>
+    )
     const addToCalendarButton = getByRole("button", {
       name: "Add to calendar",
     })
@@ -199,7 +237,11 @@ describe("CandidateConfirmation", () => {
       generateEventICalInfo: mockGenerateEventICalInfo,
     })
 
-    const { getByRole } = render(<CandidateConfirmation />)
+    const { getByRole } = render(
+      <MemoryRouter>
+        <CandidateConfirmation />
+      </MemoryRouter>
+    )
 
     const addToCalendarButton = getByRole("button", {
       name: "Add to calendar",
