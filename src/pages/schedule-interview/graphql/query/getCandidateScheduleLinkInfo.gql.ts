@@ -29,7 +29,6 @@ export const LIGetCandidateScheduleLinkInfoByShortcode = graphql(`
         interviewNotesForCandidate
         interviewAttachments {
           fileId
-          fileUrl
           mimeType
           filename
         }
