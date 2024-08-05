@@ -1,3 +1,4 @@
+import dayjs from "dayjs"
 import type { ReactNode } from "react"
 import React, { createContext, useEffect, useState } from "react"
 
@@ -40,11 +41,13 @@ export const ScheduleInterviewProvider: React.FC<{ children: ReactNode }> = ({ c
       } = candidateScheduleLinkInfo as LiCandidateScheduleLinkInfo
       const { interviewMode, interviewLink, interviewAddress } = interviewSchedule
 
-      const formattedInterviewDates = timeslots.map((timeslot) => ({
-        start: timeslot.start,
-        end: timeslot.end,
-        timeslotId: timeslot._id,
-      }))
+      const formattedInterviewDates = timeslots
+        .map((timeslot) => ({
+          start: timeslot.start,
+          end: timeslot.end,
+          timeslotId: timeslot._id,
+        }))
+        .sort((a, b) => dayjs(a.start).diff(dayjs(b.start)))
 
       // TODO: replace timeSlotId from interviewEvent
       const selectedTimeSlotId = "110000000000000000000005"
