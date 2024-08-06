@@ -8,7 +8,7 @@ import { useInterviewDateChange } from "@/pages/schedule-interview/components/Mo
 import { SelectTimeSlotsRadioGroup } from "@/pages/schedule-interview/components/SelectTimeSlotsRadioGroup/SelectTimeSlotsRadioGroup"
 import { useBookInterviewNow } from "@/pages/schedule-interview/hooks/useBookInterviewNow"
 import { useFormatTimeSlots } from "@/pages/schedule-interview/hooks/useFormatTimeSlots"
-import { useRescheduleInterview } from "@/pages/schedule-interview/hooks/useRescheduleInterview"
+import { useRescheduleCandidateInterview } from "@/pages/schedule-interview/hooks/useRescheduleCandidateInterview"
 import { useSelectTimeSlot } from "@/pages/schedule-interview/hooks/useSelectTimeSlot"
 import { InterviewTimeSlot } from "@/pages/schedule-interview/type"
 import { cn, isReschedulePage } from "@/utils"
@@ -23,14 +23,14 @@ export interface InterviewTimeSlotBookingProps {
   defaultTimeSlotId?: string
 }
 
-const isReschedule = isReschedulePage()
-
 export const MobileInterviewTimeSlotBooking: React.FC<InterviewTimeSlotBookingProps> = ({
   closeBooking,
   interviewTimes,
   initialDate,
   defaultTimeSlotId,
 }) => {
+  const isReschedule = isReschedulePage()
+
   const availableDates = [
     ...new Set(interviewTimes.map((slot: InterviewTimeSlot) => getFormattedDate(new Date(slot.start)))),
   ].sort()
@@ -44,7 +44,7 @@ export const MobileInterviewTimeSlotBooking: React.FC<InterviewTimeSlotBookingPr
     defaultTimeSlotId,
   })
   const { handleBookInterviewNow, isBookCandidateInterviewLoading } = useBookInterviewNow()
-  const { handleRescheduleInterview, isRescheduleInterviewLoading } = useRescheduleInterview()
+  const { rescheduleCandidateInterview, isRescheduleCandidateInterviewLoading } = useRescheduleCandidateInterview()
 
   const { formatTimeSlots } = useFormatTimeSlots()
   const timeSlots = formatTimeSlots(interviewTimes, currentDate)
@@ -60,10 +60,14 @@ export const MobileInterviewTimeSlotBooking: React.FC<InterviewTimeSlotBookingPr
   }
 
   const handleClickRescheduleInterview = () => {
-    handleRescheduleInterview({
-      timeslotId: selectedTimeSlotId || "",
-      shortcode: shortcode,
-      candidateTimezone: userTimezone,
+    void rescheduleCandidateInterview({
+      variables: {
+        input: {
+          timeslotId: selectedTimeSlotId || "",
+          shortcode: shortcode,
+          candidateTimezone: userTimezone,
+        },
+      },
     })
   }
 
@@ -111,7 +115,7 @@ export const MobileInterviewTimeSlotBooking: React.FC<InterviewTimeSlotBookingPr
           ])}
           disabled={selectedTimeSlotId === defaultTimeSlotId}
           onClick={handleClickRescheduleInterview}
-          loading={isRescheduleInterviewLoading}
+          loading={isRescheduleCandidateInterviewLoading}
         >
           Reschedule interview
         </Button>

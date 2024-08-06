@@ -15,7 +15,7 @@ export const useGenerateEventICalInfo = () => {
     LiGenerateEventICalInfoMutationVariables
   >(LIGenerateEventICalInfo, {
     onError: (error) => {
-      void message.error("Failed to add calendar")
+      void message.error("Failed to add calendar. Please try again")
       rollbar.error("Failed to add calendar", error)
     },
   })

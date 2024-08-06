@@ -39,6 +39,7 @@ export const LIGetCandidateScheduleLinkInfoByShortcode = graphql(`
         interviewEndsAt
         iCalId
         interviewStatus
+        timeslotId
       }
     }
   }

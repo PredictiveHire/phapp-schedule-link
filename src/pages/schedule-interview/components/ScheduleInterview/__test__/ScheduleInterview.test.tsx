@@ -2,6 +2,7 @@ import { MockedProvider } from "@apollo/client/testing"
 import { render, screen } from "@testing-library/react"
 import { Grid } from "antd"
 import React from "react"
+import { MemoryRouter } from "react-router-dom"
 
 import { useCandidateCancelInterview } from "@/pages/schedule-interview/components/CandidateConfirmation/hooks/useCandidateCancelInterview"
 import { LICandidateInterviewScheduleStatus } from "@/pages/schedule-interview/constants"
@@ -33,7 +34,9 @@ const mockUseCandidateCancelInterview = useCandidateCancelInterview as jest.Mock
 const renderComponent = () => {
   return render(
     <MockedProvider mocks={mockBookCandidateInterview} addTypename={false}>
-      <ScheduleInterview />
+      <MemoryRouter>
+        <ScheduleInterview />
+      </MemoryRouter>
     </MockedProvider>
   )
 }
